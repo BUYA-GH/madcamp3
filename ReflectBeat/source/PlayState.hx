@@ -1,5 +1,6 @@
 package;
 
+import flixel.text.FlxText;
 import flixel.FlxG;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.FlxSprite;
@@ -10,7 +11,10 @@ class PlayState extends FlxState
 {
 	var tempLine:FlxSprite;
 	var tempHitBox:FlxSprite;
+	var tempJudgeBox:FlxSprite;
 	var tempNote:FlxTypedGroup<Note>;
+
+	var debugText:FlxText;
 
 	var startNotePos:Float = 90;
 	var conductor:Conductor;
@@ -20,19 +24,20 @@ class PlayState extends FlxState
 		tempLine = new FlxSprite(startNotePos, 0).makeGraphic(1020, 720, FlxColor.WHITE);
 		add(tempLine);
 
+		tempJudgeBox = new FlxSprite(startNotePos, 670).makeGraphic(1020, 20, FlxColor.YELLOW);
+		add(tempJudgeBox);
+
 		tempHitBox = new FlxSprite(startNotePos, 700).makeGraphic(1020, 20, FlxColor.LIME);
 		add(tempHitBox);
 
 		tempNote = new FlxTypedGroup<Note>();
 		add(tempNote);
 		
-		conductor = new Conductor();
+		debugText = new FlxText(1110, 300, 0, "", 15);
+		add(debugText);
 
-		FlxG.sound.music = null;
-		if(FlxG.sound.music == null)
-		{
-			FlxG.sound.playMusic(AssetPaths.song__mp3, 1, false);
-		}
+		conductor = new Conductor();
+		
 
 		super.create();
 	}
@@ -40,10 +45,14 @@ class PlayState extends FlxState
 	override public function update(elapsed:Float)
 	{
 		super.update(elapsed);
-
-		if(conductor.isStart)
+		debugText.text = Std.string(elapsed);
+		
+		if (!conductor.isStart)
 		{
-			conductor.curTime += elapsed;
+			conductor.playSong();
+		} 
+		else
+		{
 			if (conductor.curSecTime <= conductor.curTime)
 			{
 				var notes = conductor.readSection();
@@ -57,7 +66,8 @@ class PlayState extends FlxState
 				}
 			}
 		}
-
+		//conductor.prevTime = conductor.curTime;
+		conductor.curTime += elapsed;
 		FlxG.overlap(tempHitBox, tempNote, noteDestroy);
 	}
 

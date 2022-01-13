@@ -25,9 +25,10 @@ class Conductor
     var secLength:Int;
     var secIndex:Int = 0;
 
-    public var isStart:Bool = true;
+    public var isStart:Bool = false;
 	public var canMakeNote:Bool = false;
 
+    public var prevTime:Float = 0.0;
     public var curTime:Float = 0.0;
 	public var curSecTime:Float = 0.0;
     public var curBeat:Int;
@@ -43,20 +44,25 @@ class Conductor
         
 		songInfo = cast Json.parse(rawJson);
         secLength = songInfo.sections.length;
+        curSecTime = songInfo.sync;
     }
 
     public function playSong()
     {
-        
+		if (curSecTime <= curTime && FlxG.sound.music == null)
+		{
+			FlxG.sound.playMusic("assets/music/diavolo/song.mp3", 1, false);
+            isStart = true;
+        }
     }
 
     public function readSection()
     {
 		var read:String = "";
+		curTime = curTime - curSecTime;
         while(true)
         {
 			read = songInfo.sections[secIndex++];
-            curTime = 0.0;
 
             if(read.charAt(0) == "-")
             {
