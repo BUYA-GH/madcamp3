@@ -22,9 +22,17 @@ class Conductor
 {
 	inline public static var SOUND_EXT = "mp3";
 
+	var songname:String;
+	var difficulty:Int;
+
+	var musicPath:String;
+	var scorePath:String;
+
 	var songInfo:SongData;
 	var secLength:Int;
 	var secIndex:Int = 0;
+
+	public var noteNum:Int = 0;
 
 	public var isStart:Bool = false;
 	public var canMakeNote:Bool = false;
@@ -34,9 +42,21 @@ class Conductor
 	public var curSecTime:Float = 0.0;
 	public var curBeat:Int;
 
-	public function new()
+	public function new(songname:String, difficulty:Int)
 	{
-		var rawJson = Assets.getText('assets/data/diavolo/hard.json').trim();
+		this.songname = songname;
+		this.difficulty = difficulty;
+
+		if (difficulty == 0)
+		{
+			scorePath = "assets/data/" + songname.toLowerCase() + "/easy.json";
+		}
+		else if (difficulty == 1)
+		{
+			scorePath = "assets/data/" + songname.toLowerCase() + "/hard.json";
+		}
+
+		var rawJson = Assets.getText(scorePath).trim();
 
 		while (!rawJson.endsWith("}"))
 		{
@@ -46,13 +66,33 @@ class Conductor
 		songInfo = cast Json.parse(rawJson);
 		secLength = songInfo.sections.length;
 		curSecTime = songInfo.sync;
+
+		var read:String = "";
+		var readIndex:Int = 0;
+		while (true)
+		{
+			read = songInfo.sections[readIndex++];
+			if (read.charAt(0) == "-")
+				continue;
+			else if (read == "E")
+				break;
+
+			for (i in 0...12)
+			{
+				if (read.charAt(i) != "0")
+				{
+					noteNum++;
+				}
+			}
+		}
 	}
 
 	public function playSong()
 	{
 		if (curSecTime <= curTime && FlxG.sound.music == null)
 		{
-			FlxG.sound.playMusic("assets/music/diavolo/song.mp3", 1, false);
+			musicPath = "assets/music/" + songname.toLowerCase + "/song.mp3";
+			FlxG.sound.playMusic(musicPath, 1, false);
 			isStart = true;
 		}
 	}
