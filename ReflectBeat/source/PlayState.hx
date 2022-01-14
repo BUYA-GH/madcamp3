@@ -53,7 +53,7 @@ class PlayState extends FlxState
 
 	override public function create()
 	{
-		background = new FlxSprite(startNotePos, 0).makeGraphic(backgroundWidth, backgroundHeight, FlxColor.WHITE);
+		background = new FlxSprite(startNotePos, 0).makeGraphic(backgroundWidth, backgroundHeight, FlxColor.GRAY);
 		add(background);
 
 		criticalBoxPos = Std.int(hitBoxPos + (hitBoxSize / 2) - (criticalBoxSize / 2) - (noteSize / 2));
@@ -63,7 +63,7 @@ class PlayState extends FlxState
 
 		fastBoxPos = Std.int(criticalBoxPos - fastBoxSize);
 		fastBox = new FlxUISprite(startNotePos, fastBoxPos).makeGraphic(backgroundWidth, fastBoxSize, FlxColor.RED);
-		// fastBox = new FlxUISprite(startNotePos, fastBoxPos).makeGraphic(backgroundWidth, fastBoxSize, FlxColor.TRANSPARENT);
+		// fastBox = new FlxUISprite(startNotePos, fastBoxPos).makeGraphic(backgroundWidth, fastBoxSize,oFlxColor.TRANSPARENT);
 		add(fastBox);
 
 		lateBoxPos = Std.int(criticalBoxPos + criticalBoxSize);

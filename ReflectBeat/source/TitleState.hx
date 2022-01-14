@@ -1,5 +1,6 @@
 package;
 
+import flixel.util.FlxAxes;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
@@ -8,6 +9,7 @@ import flixel.ui.FlxButton;
 class TitleState extends FlxState
 {
 	var playButton:FlxButton;
+	var fullscreenButton:FlxButton;
 
 	override public function create()
 	{
@@ -17,6 +19,10 @@ class TitleState extends FlxState
 		playButton = new FlxButton(0, 0, "Press Enter", clickPlay);
 		playButton.screenCenter();
 		add(playButton);
+
+		fullscreenButton = new FlxButton(0, 200, FlxG.fullscreen ? "FULLSCREEN" : "WINDOWED", clickFullscreen);
+		fullscreenButton.screenCenter(FlxAxes.X);
+		add(fullscreenButton);
 
 		super.create();
 	}
@@ -32,5 +38,11 @@ class TitleState extends FlxState
 	function clickPlay()
 	{
 		FlxG.switchState(new SelectState());
+	}
+
+	function clickFullscreen()
+	{
+		FlxG.fullscreen = !FlxG.fullscreen;
+		fullscreenButton.text = FlxG.fullscreen ? "FULLSCREEN" : "WINDOWED";
 	}
 }

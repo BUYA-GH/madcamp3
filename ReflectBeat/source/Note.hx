@@ -14,14 +14,21 @@ class Note extends FlxSprite
 
 	public function new(x:Float, y:Float, startKey:Int, type:Int)
 	{
-		super(x, y);
+		//super(x, y);
+		super(x + 85 * ((type - 1) / 2), y);
+
 		this.startKey = startKey;
 		this.type = type;
 
-		makeGraphic(85 * type, 20, FlxColor.BLACK);
-
-		width = 85;
-		height = 20;
+		if (type > 4)
+		{
+			loadGraphic('assets/images/yellow_note.png', false, 85, 20);
+		}
+		else
+		{
+			loadGraphic('assets/images/note.png', false, 85, 20);
+		}
+		setGraphicSize(85 * type, 20);
 	}
 
 	override function update(elapsed:Float)
