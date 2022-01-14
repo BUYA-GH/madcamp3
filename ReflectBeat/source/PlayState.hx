@@ -22,7 +22,10 @@ class PlayState extends FlxState
 	var underLineSize:Int = 1;
 
 	var noteGroup:FlxTypedGroup<Note>;
-	var noteSize:Int = 20;
+	var noteWidth:Int;
+	var noteHeight:Int = 20;
+
+	var judgeGroup:FlxTypedGroup<FlxSprite>;
 
 	var upperMissBox:FlxSprite;
 	var upperMissBoxSize:Int = 40;
@@ -53,21 +56,25 @@ class PlayState extends FlxState
 
 	override public function create()
 	{
+		noteWidth = Std.int(backgroundWidth / 12);
+
 		background = new FlxSprite(startNotePos, 0).makeGraphic(backgroundWidth, backgroundHeight, FlxColor.GRAY);
 		add(background);
 
-		criticalBoxPos = Std.int(hitBoxPos + (hitBoxSize / 2) - (criticalBoxSize / 2) - (noteSize / 2));
-		criticalBox = new FlxUISprite(startNotePos, criticalBoxPos).makeGraphic(backgroundWidth, criticalBoxSize, FlxColor.GREEN);
+		criticalBoxPos = Std.int(hitBoxPos + (hitBoxSize / 2) - (criticalBoxSize / 2) - (noteHeight / 2));
+		criticalBox = new FlxUISprite(startNotePos, criticalBoxPos).makeGraphic(backgroundWidth, criticalBoxSize, FlxColor.TRANSPARENT);
+		// makeGraphic(backgroundWidth, criticalBoxSize, FlxColor.GREEN);
+		// loadGraphic("assets/images/JudgeLaser.png"
 		// criticalBox = new FlxUISprite(startNotePos, criticalBoxPos).makeGraphic(backgroundWidth, criticalBoxSize, FlxColor.TRANSPARENT);
 		add(criticalBox);
 
 		fastBoxPos = Std.int(criticalBoxPos - fastBoxSize);
-		fastBox = new FlxUISprite(startNotePos, fastBoxPos).makeGraphic(backgroundWidth, fastBoxSize, FlxColor.RED);
+		fastBox = new FlxUISprite(startNotePos, fastBoxPos).makeGraphic(backgroundWidth, fastBoxSize, FlxColor.TRANSPARENT);
 		// fastBox = new FlxUISprite(startNotePos, fastBoxPos).makeGraphic(backgroundWidth, fastBoxSize,oFlxColor.TRANSPARENT);
 		add(fastBox);
 
 		lateBoxPos = Std.int(criticalBoxPos + criticalBoxSize);
-		lateBox = new FlxUISprite(startNotePos, lateBoxPos).makeGraphic(backgroundWidth, lateBoxSize, FlxColor.BLUE);
+		lateBox = new FlxUISprite(startNotePos, lateBoxPos).makeGraphic(backgroundWidth, lateBoxSize, FlxColor.TRANSPARENT);
 		// lateBox = new FlxUISprite(startNotePos, lateBoxPos).makeGraphic(backgroundWidth, lateBoxSize, FlxColor.TRANSPARENT);
 		add(lateBox);
 
@@ -76,14 +83,27 @@ class PlayState extends FlxState
 		upperMissBox = new FlxUISprite(startNotePos, upperMissBoxPos).makeGraphic(backgroundWidth, upperMissBoxSize, FlxColor.TRANSPARENT);
 		add(upperMissBox);
 
-		hitBox = new FlxSprite(startNotePos, hitBoxPos).makeGraphic(backgroundWidth, hitBoxSize, FlxColor.YELLOW);
+		hitBox = new FlxSprite(startNotePos, hitBoxPos).loadGraphic("assets/images/JudgeLaser.png", backgroundWidth, hitBoxSize);
 		add(hitBox);
 
 		underLine = new FlxSprite(startNotePos, backgroundHeight - underLineSize).makeGraphic(backgroundWidth, underLineSize, FlxColor.BLACK);
+		//underLine = new FlxSprite(startNotePos, 680).makeGraphic(backgroundWidth, underLineSize, FlxColor.BLACK);
 		add(underLine);
 
 		noteGroup = new FlxTypedGroup<Note>();
 		add(noteGroup);
+
+		judgeGroup = new FlxTypedGroup<FlxSprite>();
+		add(judgeGroup);
+		for (i in (0...12))
+		{
+			var xJudgePoint:Int = Std.int(startNotePos + i*noteWidth + (noteWidth/2) - (120/2));
+			var yJudgePoint:Int = Std.int(hitBoxPos + (hitBoxSize/2) - (120/2));
+			var judgeAnim = new FlxSprite(xJudgePoint, yJudgePoint).loadGraphic("assets/images/judge.png", true, 120, 120);
+			judgeAnim.animation.add("crit", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], 24, false);
+			// judgeAnim.animation.add("near", [7, 8, 9, 10, 11, 12, 13], 30, false);
+			judgeGroup.add(judgeAnim);
+		}
 
 		conductor = new Conductor();
 		debugText = new FlxText(1110, 300, 0, "", 15);
@@ -133,19 +153,20 @@ class PlayState extends FlxState
 		var key10:Bool = FlxG.keys.justPressed.LBRACKET;
 		var key11:Bool = FlxG.keys.justPressed.RBRACKET;
 		keyInput = [key0, key1, key2, key3, key4, key5, key6, key7, key8, key9, key10, key11];
-		var back:Bool = FlxG.keys.justPressed.ESCAPE || FlxG.keys.justPressed.BACKSLASH;
+		// var back:Bool = FlxG.keys.justPressed.ESCAPE || FlxG.keys.justPressed.BACKSLASH;
 
 		// conductor.prevTime = conductor.curTime;
 		conductor.curTime += elapsed;
-		// FlxG.overlap(upperMissBox, noteGroup, checkMiss);
+		//FlxG.overlap(upperMissBox, noteGroup, checkMiss);
 		FlxG.overlap(fastBox, noteGroup, checkFast);
 		FlxG.overlap(criticalBox, noteGroup, checkCritical);
 		FlxG.overlap(lateBox, noteGroup, checkLate);
 		FlxG.overlap(underLine, noteGroup, missDestroy);
-		if (back)
-		{
-			remove(this);
-		}
+		/*
+			if (back)
+			{
+				remove(this);
+		}*/
 	}
 
 	function checkMiss(missBox:FlxSprite, note:Note)
@@ -182,6 +203,8 @@ class PlayState extends FlxState
 			if (keyInput[i])
 			{
 				pressed = true;
+				judgeGroup.members[i].animation.stop();
+				judgeGroup.members[i].animation.play("crit");
 				break;
 			}
 		}
@@ -206,6 +229,8 @@ class PlayState extends FlxState
 			if (keyInput[i])
 			{
 				pressed = true;
+				judgeGroup.members[i].animation.stop();
+				judgeGroup.members[i].animation.play("crit");
 				break;
 			}
 		}
@@ -230,6 +255,8 @@ class PlayState extends FlxState
 			if (keyInput[i])
 			{
 				pressed = true;
+				judgeGroup.members[i].animation.stop();
+				judgeGroup.members[i].animation.play("crit");
 				break;
 			}
 		}
@@ -245,6 +272,8 @@ class PlayState extends FlxState
 
 	function missDestroy(underLine:FlxSprite, note:Note)
 	{
+		//judgeGroup.members[Std.int(note.startKey + (note.type / 2))].animation.stop();
+		//judgeGroup.members[Std.int(note.startKey + (note.type/2))].animation.play("crit");
 		note.kill();
 		updateScore("Miss");
 		noteGroup.remove(note);
