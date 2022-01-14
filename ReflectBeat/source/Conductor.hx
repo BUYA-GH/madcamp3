@@ -1,66 +1,80 @@
 package;
 
-import Song.SwagSong;
+import flixel.FlxG;
+import lime.utils.Assets;
+import haxe.Json;
 
-/**
- * ...
- * @author
- */
-typedef BPMChangeEvent =
-{
-	var stepTime:Int;
-	var songTime:Float;
-	var bpm:Int;
+using StringTools;
+
+typedef SongData = {
+	var title:String;
+	var artist:String;
+	var difficulty:String;
+	var level:Int;
+	var bpm:Float;
+	var sync:Float;
+
+    var sections:Array<String>;
 }
 
 class Conductor
 {
-	public static var bpm:Int = 100;
-	public static var crochet:Float = ((60 / bpm) * 1000); // beats in milliseconds
-	public static var stepCrochet:Float = crochet / 4; // steps in milliseconds
-	public static var songPosition:Float;
-	public static var lastSongPos:Float;
-	public static var offset:Float = 0;
+	inline public static var SOUND_EXT = "mp3";
 
-	public static var safeFrames:Int = 10;
-	public static var safeZoneOffset:Float = (safeFrames / 60) * 1000; // is calculated in create(), is safeFrames in milliseconds
+	var songInfo:SongData;
+    var secLength:Int;
+    var secIndex:Int = 0;
 
-	public static var bpmChangeMap:Array<BPMChangeEvent> = [];
+    public var isStart:Bool = false;
+	public var canMakeNote:Bool = false;
 
-	public function new() {}
+    public var prevTime:Float = 0.0;
+    public var curTime:Float = 0.0;
+	public var curSecTime:Float = 0.0;
+    public var curBeat:Int;
+	
+    public function new()
+    {
+		var rawJson = Assets.getText('assets/data/diavolo/chart.json').trim();
 
-	public static function mapBPMChanges(song:SwagSong)
-	{
-		bpmChangeMap = [];
+        while(!rawJson.endsWith("}"))
+        {
+			rawJson = rawJson.substr(0, rawJson.length - 1);
+        }
+        
+		songInfo = cast Json.parse(rawJson);
+        secLength = songInfo.sections.length;
+        curSecTime = songInfo.sync;
+    }
 
-		var curBPM:Int = song.bpm;
-		var totalSteps:Int = 0;
-		var totalPos:Float = 0;
-		for (i in 0...song.notes.length)
+    public function playSong()
+    {
+		if (curSecTime <= curTime && FlxG.sound.music == null)
 		{
-			if (song.notes[i].changeBPM && song.notes[i].bpm != curBPM)
-			{
-				curBPM = song.notes[i].bpm;
-				var event:BPMChangeEvent = {
-					stepTime: totalSteps,
-					songTime: totalPos,
-					bpm: curBPM
-				};
-				bpmChangeMap.push(event);
-			}
+			FlxG.sound.playMusic("assets/music/diavolo/song.mp3", 1, false);
+            isStart = true;
+        }
+    }
 
-			var deltaSteps:Int = song.notes[i].lengthInSteps;
-			totalSteps += deltaSteps;
-			totalPos += ((60 / curBPM) * 1000 / 4) * deltaSteps;
+    public function readSection()
+    {
+		var read:String = "";
+		curTime = curTime - curSecTime;
+        while(true)
+        {
+			read = songInfo.sections[secIndex++];
+
+            if(read.charAt(0) == "-")
+            {
+                curBeat = Std.parseInt(read.substr(1));
+                curSecTime = (60 / songInfo.bpm) * (4 / curBeat);
+            }
+            else
+            {
+                break;
+            }
 		}
-		trace("new BPM map BUDDY " + bpmChangeMap);
-	}
-
-	public static function changeBPM(newBpm:Int)
-	{
-		bpm = newBpm;
-
-		crochet = ((60 / bpm) * 1000);
-		stepCrochet = crochet / 4;
-	}
+        if(secIndex >= secLength) isStart = false;
+        return read;
+    }
 }

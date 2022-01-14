@@ -28,7 +28,6 @@ class Main extends Sprite
 	public function new()
 	{
 		super();
-
 		if (stage != null)
 		{
 			init();
@@ -72,5 +71,5 @@ class Main extends Sprite
 		#if !mobile
 		addChild(new FPS(10, 3, 0xFFFFFF));
 		#end
-	}
+  }
 }
