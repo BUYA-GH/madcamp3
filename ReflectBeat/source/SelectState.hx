@@ -9,15 +9,11 @@ import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
+import haxe.display.JsonModuleTypes.JsonTypeParameters;
 import lime.utils.Assets;
 
 class SelectState extends FlxState
 {
-	private var controls(get, never):Controls;
-
-	inline function get_controls():Controls
-		return PlayerSettings.player1.controls;
-
 	var playButton:FlxButton;
 	var songs:Array<SongMetadata> = [];
 
@@ -149,7 +145,7 @@ class SelectState extends FlxState
 			// PlayState.SONG = Song.loadFromJson(poop, songs[curSelected].songName.toLowerCase());
 			// trace('CUR WEEK' + PlayState.storyWeek);
 			// LoadingState.loadAndSwitchState(new PlayState());
-			FlxG.switchState(new LoadingState());
+			FlxG.switchState(new PlayState());
 		}
 	}
 
