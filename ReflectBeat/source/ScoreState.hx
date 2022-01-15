@@ -59,7 +59,7 @@ class ScoreState extends FlxState
 		lateText.setFormat(Paths.font("DREAMS.ttf"), 10, FlxColor.WHITE);
 		add(lateText);
 
-		missText = new FlxText(500, 300, Std.string(maxCombo));
+		missText = new FlxText(500, 300, Std.string(miss));
 		missText.setFormat(Paths.font("DREAMS.ttf"), 10, FlxColor.WHITE);
 		add(missText);
 
