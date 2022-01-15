@@ -7,7 +7,7 @@ import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
 import haxe.macro.Compiler.IncludePosition;
-import js.lib.Intl;
+//import js.lib.Intl;
 
 class ScoreState extends FlxState
 {

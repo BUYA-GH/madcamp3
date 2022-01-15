@@ -9,7 +9,7 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import haxe.Timer;
-import js.html.audio.ScriptProcessorNode;
+//import js.html.audio.ScriptProcessorNode;
 
 class PlayState extends FlxState
 {

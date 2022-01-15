@@ -90,7 +90,10 @@ class Conductor
 	{
 		if (curSecTime <= curTime && FlxG.sound.music == null)
 		{
-			FlxG.sound.playMusic(Paths.music(songname.toLowerCase() + "/song"), 0);
+			//trace(songname.toLowerCase());
+			//trace(Paths.music(songname.toLowerCase() + "/song"));
+			//FlxG.sound.playMusic("assets/music/" + songname.toLowerCase() + "/song.mp3", 0);
+			FlxG.sound.playMusic(Paths.music(songname.toLowerCase() + "/song"), 1);
 			isStart = true;
 		}
 	}
