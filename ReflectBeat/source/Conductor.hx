@@ -91,11 +91,15 @@ class Conductor
 
 	public function playSong()
 	{
+		trace(curSecTime);
+		trace(curTime);
 		if (curSecTime <= curTime && FlxG.sound.music == null)
 		{
 			//trace(songname.toLowerCase());
 			//trace(Paths.music(songname.toLowerCase() + "/song"));
 			//FlxG.sound.playMusic("assets/music/" + songname.toLowerCase() + "/song.mp3", 0);
+			curTime = 0.0;
+			curSecTime = 0.0;
 			FlxG.sound.playMusic(Paths.music(songname.toLowerCase() + "/song"), 1);
 			isStart = true;
 		}

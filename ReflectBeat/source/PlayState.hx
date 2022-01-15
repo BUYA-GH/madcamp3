@@ -1,5 +1,6 @@
 package;
 
+import flixel.system.FlxSound;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
@@ -31,7 +32,7 @@ class PlayState extends FlxState
 
 	var hitBox:FlxSprite;
 	var hitBoxSize:Int = 20;
-	var hitBoxPos:Int = 670;
+	var hitBoxPos:Int = 680;
 
 	var underLine:FlxSprite;
 	var underLineSize:Int = 1;
@@ -47,15 +48,15 @@ class PlayState extends FlxState
 	var upperMissBoxPos:Int;
 
 	var criticalBox:FlxSprite;
-	var criticalBoxSize:Int = 40;
+	var criticalBoxSize:Int;
 	var criticalBoxPos:Int;
 
 	var fastBox:FlxSprite;
-	var fastBoxSize:Int = 20;
+	var fastBoxSize:Int;
 	var fastBoxPos:Int;
 
 	var lateBox:FlxSprite;
-	var lateBoxSize:Int = 20;
+	var lateBoxSize:Int;
 	var lateBoxPos:Int;
 
 	var debugText:FlxText;
@@ -66,6 +67,8 @@ class PlayState extends FlxState
 
 	var startNotePos:Float = 90;
 	var conductor:Conductor;
+
+	var tickSound:FlxSound;
 
 	var speed:Float;
 
@@ -84,8 +87,14 @@ class PlayState extends FlxState
 		background = new FlxSprite(0, 0).loadGraphic(Paths.image('play_state'), backgroundWidth, backgroundHeight);
 		add(background);
 
-		criticalBoxPos = Std.int(hitBoxPos + (hitBoxSize / 2) - (criticalBoxSize / 2) - (noteHeight / 2));
-		criticalBox = new FlxUISprite(startNotePos, criticalBoxPos).makeGraphic(backgroundWidth, criticalBoxSize, FlxColor.TRANSPARENT);
+		criticalBoxSize = Std.int(speed / 24);
+		fastBoxSize = lateBoxSize = Std.int(criticalBoxSize / 2); 
+
+		criticalBoxPos = Std.int(hitBoxPos - 3*(criticalBoxSize/4));
+		criticalBox = new FlxSprite(startNotePos, criticalBoxPos).makeGraphic(backgroundWidth, criticalBoxSize, FlxColor.TRANSPARENT);
+
+		//criticalBoxPos = Std.int(hitBoxPos + (hitBoxSize / 2) - (criticalBoxSize / 2) - (noteHeight / 2));
+		//criticalBox = new FlxUISprite(startNotePos, criticalBoxPos).makeGraphic(backgroundWidth, criticalBoxSize, FlxColor.TRANSPARENT);
 		// makeGraphic(backgroundWidth, criticalBoxSize, FlxColor.GREEN);
 		// loadGraphic("assets/images/JudgeLaser.png"
 		// criticalBox = new FlxUISprite(startNotePos, criticalBoxPos).makeGraphic(backgroundWidth, criticalBoxSize, FlxColor.TRANSPARENT);
@@ -106,7 +115,7 @@ class PlayState extends FlxState
 		upperMissBox = new FlxUISprite(startNotePos, upperMissBoxPos).makeGraphic(backgroundWidth, upperMissBoxSize, FlxColor.TRANSPARENT);
 		add(upperMissBox);
 
-		hitBox = new FlxSprite(startNotePos, hitBoxPos).loadGraphic("assets/images/JudgeLaser.png", backgroundWidth, hitBoxSize);
+		hitBox = new FlxSprite(startNotePos, hitBoxPos - (hitBoxSize/2)).loadGraphic("assets/images/JudgeLaser.png", backgroundWidth, hitBoxSize);
 		add(hitBox);
 
 		underLine = new FlxSprite(startNotePos, backgroundHeight - underLineSize).makeGraphic(backgroundWidth, underLineSize, FlxColor.BLACK);
@@ -139,6 +148,8 @@ class PlayState extends FlxState
 		add(scoreText);
 		add(comboText);
 
+		tickSound = FlxG.sound.load('assets/sounds/tick.wav', 1, false);
+
 		super.create();
 	}
 
@@ -150,8 +161,11 @@ class PlayState extends FlxState
 		{
 			conductor.playSong();
 		}
-		else
+		
+		if( conductor.isStart)
 		{
+			trace(conductor.curSecTime);
+			trace(conductor.curTime);
 			if (conductor.curSecTime <= conductor.curTime)
 			{
 				var notes = conductor.readSection();
@@ -245,6 +259,7 @@ class PlayState extends FlxState
 			combo++;
 			fastNum++;
 
+			tickSound.play(true);
 			updateScore("Fast");
 			note.kill();
 			noteGroup.remove(note);
@@ -274,6 +289,7 @@ class PlayState extends FlxState
 			combo++;
 			criticalNum++;
 
+			tickSound.play(true);
 			updateScore("Critical");
 			note.kill();
 			noteGroup.remove(note);
@@ -303,6 +319,7 @@ class PlayState extends FlxState
 			combo++;
 			lateNum++;
 
+			tickSound.play(true);
 			updateScore("Late");
 			note.kill();
 			noteGroup.remove(note);
