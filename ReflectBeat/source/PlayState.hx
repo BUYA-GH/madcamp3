@@ -118,7 +118,7 @@ class PlayState extends FlxState
 		hitBox = new FlxSprite(startNotePos, hitBoxPos - (hitBoxSize/2)).loadGraphic("assets/images/JudgeLaser.png", backgroundWidth, hitBoxSize);
 		add(hitBox);
 
-		underLine = new FlxSprite(startNotePos, backgroundHeight - underLineSize).makeGraphic(backgroundWidth, underLineSize, FlxColor.BLACK);
+		underLine = new FlxSprite(startNotePos, lateBoxPos + 21).makeGraphic(backgroundWidth, underLineSize, FlxColor.BLACK);
 		// underLine = new FlxSprite(startNotePos, 680).makeGraphic(backgroundWidth, underLineSize, FlxColor.BLACK);
 		add(underLine);
 
