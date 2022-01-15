@@ -67,11 +67,14 @@ class PlayState extends FlxState
 	var startNotePos:Float = 90;
 	var conductor:Conductor;
 
-	public function new(songname:String, difficulty:Int)
+	var speed:Float;
+
+	public function new(songname:String, difficulty:Int, speed:Float)
 	{
 		super();
 		this.songname = songname;
 		this.difficulty = difficulty;
+		this.speed = speed;
 	}
 
 	override public function create()
@@ -124,7 +127,7 @@ class PlayState extends FlxState
 			// judgeAnim.animation.add("near", [7, 8, 9, 10, 11, 12, 13], 30, false);
 			judgeGroup.add(judgeAnim);
 		}
-		conductor = new Conductor(songname, difficulty);
+		conductor = new Conductor(songname, difficulty, speed);
 		noteNum = conductor.noteNum;
 		oneNoteScore = 10000000 / noteNum;
 
@@ -164,7 +167,7 @@ class PlayState extends FlxState
 
 					else if (notes.charAt(i) != "0")
 					{
-						noteGroup.add(new Note(startNotePos + (85 * i), 0, i, Std.parseInt(notes.charAt(i))));
+						noteGroup.add(new Note(startNotePos + (85 * i), 0, i, Std.parseInt(notes.charAt(i)), speed));
 					}
 				}
 			}

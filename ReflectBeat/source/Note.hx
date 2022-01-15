@@ -6,19 +6,20 @@ import flixel.util.FlxColor;
 
 class Note extends FlxSprite
 {
-	var noteSpeed:Float = 1000;
+	public var noteSpeed:Float = 1000;
 	var canPress:Bool;
 
 	public var startKey:Int;
 	public var type:Int;
 
-	public function new(x:Float, y:Float, startKey:Int, type:Int)
+	public function new(x:Float, y:Float, startKey:Int, type:Int, speed:Float)
 	{
 		// super(x, y);
 		super(x + 85 * ((type - 1) / 2), y);
 
 		this.startKey = startKey;
 		this.type = type;
+		this.noteSpeed = speed;
 
 		if (type > 4)
 		{

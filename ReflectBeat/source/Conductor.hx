@@ -36,15 +36,17 @@ class Conductor
 	public var isStart:Bool = false;
 	public var canMakeNote:Bool = false;
 
-	public var prevTime:Float = 0.0;
 	public var curTime:Float = 0.0;
 	public var curSecTime:Float = 0.0;
 	public var curBeat:Int;
 
-	public function new(songname:String, difficulty:Int)
+	var notespeed:Float;
+
+	public function new(songname:String, difficulty:Int, speed:Float)
 	{
 		this.songname = songname;
 		this.difficulty = difficulty;
+		this.notespeed = speed;
 
 		if (difficulty == 0)
 		{
@@ -64,7 +66,8 @@ class Conductor
 
 		songInfo = cast Json.parse(rawJson);
 		secLength = songInfo.sections.length;
-		curSecTime = songInfo.sync;
+		curSecTime = (songInfo.sync / 1000) - (670 / notespeed);
+
 
 		var read:String = "";
 		var readIndex:Int = 0;
