@@ -3,10 +3,13 @@ package;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.addons.plugin.FlxScrollingText.ScrollingTextData;
 import flixel.addons.ui.FlxUISprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
+import haxe.Timer;
+import js.html.audio.ScriptProcessorNode;
 
 class PlayState extends FlxState
 {
@@ -14,9 +17,13 @@ class PlayState extends FlxState
 	var difficulty:Int;
 	var noteNum:Int;
 	var oneNoteScore:Float;
+
 	var score:Float = 0;
 	var combo:Int = 0;
+	var maxCombo:Int = 0;
 	var criticalNum:Int = 0;
+	var fastNum:Int = 0;
+	var lateNum:Int = 0;
 
 	var background:FlxSprite;
 	var backgroundWidth:Int = 1020;
@@ -130,7 +137,7 @@ class PlayState extends FlxState
 				for (i in 0...12)
 				{
 					if (notes.charAt(0) == "E")
-						break;
+						gotoScoreState(Std.int(score), criticalNum, fastNum, lateNum, noteNum - (criticalNum + fastNum + lateNum), maxCombo);
 					if (notes.charAt(i) != "0")
 					{
 						noteGroup.add(new Note(startNotePos + (85 * i), 0, i, Std.parseInt(notes.charAt(i))));
@@ -206,6 +213,7 @@ class PlayState extends FlxState
 		{
 			score += oneNoteScore / 2;
 			combo++;
+			fastNum++;
 
 			updateScore("Fast");
 			note.kill();
@@ -259,6 +267,7 @@ class PlayState extends FlxState
 		{
 			score += oneNoteScore / 2;
 			combo++;
+			lateNum++;
 
 			updateScore("Late");
 			note.kill();
@@ -268,6 +277,10 @@ class PlayState extends FlxState
 
 	function missDestroy(underLine:FlxSprite, note:Note)
 	{
+		if (combo > maxCombo)
+		{
+			maxCombo = combo;
+		}
 		combo = 0;
 		updateScore("Miss");
 
@@ -282,5 +295,13 @@ class PlayState extends FlxState
 			score = 10000000;
 		scoreText.text = Std.string(Std.int(score));
 		comboText.text = Std.string(combo);
+	}
+
+	function gotoScoreState(score:Int, critical:Int, fast:Int, late:Int, miss:Int, maxCombo:Int)
+	{
+		Timer.delay(function()
+		{
+			FlxG.switchState(new ScoreState(score, critical, fast, late, miss, maxCombo));
+		}, 3000);
 	}
 }
