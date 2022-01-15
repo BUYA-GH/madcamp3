@@ -156,10 +156,12 @@ class PlayState extends FlxState
 				for (i in 0...12)
 				{
 					if (notes.charAt(0) == "E")
+
 						Timer.delay(function()
 						{
 							gotoScoreState();
 						}, 3000);
+
 					else if (notes.charAt(i) != "0")
 					{
 						noteGroup.add(new Note(startNotePos + (85 * i), 0, i, Std.parseInt(notes.charAt(i))));
@@ -227,6 +229,7 @@ class PlayState extends FlxState
 			if (keyInput[i])
 			{
 				pressed = true;
+				judgeGroup.members[i].setGraphicSize(120 * size, 120);
 				judgeGroup.members[i].animation.stop();
 				judgeGroup.members[i].animation.play("crit");
 				break;
