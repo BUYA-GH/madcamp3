@@ -3,13 +3,28 @@ package;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.addons.plugin.FlxScrollingText.ScrollingTextData;
 import flixel.addons.ui.FlxUISprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
+import haxe.Timer;
+import js.html.audio.ScriptProcessorNode;
 
 class PlayState extends FlxState
 {
+	var songname:String;
+	var difficulty:Int;
+	var noteNum:Int;
+	var oneNoteScore:Float;
+
+	var score:Float = 0;
+	var combo:Int = 0;
+	var maxCombo:Int = 0;
+	var criticalNum:Int = 0;
+	var fastNum:Int = 0;
+	var lateNum:Int = 0;
+
 	var background:FlxSprite;
 	var backgroundWidth:Int = 1020;
 	var backgroundHeight:Int = 720;
@@ -43,16 +58,21 @@ class PlayState extends FlxState
 	var lateBoxSize:Int = 20;
 	var lateBoxPos:Int;
 
-	var score:String;
-	var combo:Int = 0;
-
 	var debugText:FlxText;
+	var scoreText:FlxText;
 	var comboText:FlxText;
 
 	var keyInput:Array<Bool>;
 
 	var startNotePos:Float = 90;
 	var conductor:Conductor;
+
+	public function new(songname:String, difficulty:Int)
+	{
+		super();
+		this.songname = songname;
+		this.difficulty = difficulty;
+	}
 
 	override public function create()
 	{
@@ -93,6 +113,7 @@ class PlayState extends FlxState
 		noteGroup = new FlxTypedGroup<Note>();
 		add(noteGroup);
 
+
 		judgeGroup = new FlxTypedGroup<FlxSprite>();
 		add(judgeGroup);
 		for (i in (0...12))
@@ -104,12 +125,16 @@ class PlayState extends FlxState
 			// judgeAnim.animation.add("near", [7, 8, 9, 10, 11, 12, 13], 30, false);
 			judgeGroup.add(judgeAnim);
 		}
+		conductor = new Conductor(songname, difficulty);
+		noteNum = conductor.noteNum;
+		oneNoteScore = 10000000 / noteNum;
 
-		conductor = new Conductor();
 		debugText = new FlxText(1110, 300, 0, "", 15);
-		comboText = new FlxText(1110, 330, 0, "0", 15);
+		scoreText = new FlxText(1110, 330, 0, "0", 15);
+		comboText = new FlxText(1110, 360, 0, "0", 15);
 
 		add(debugText);
+		add(scoreText);
 		add(comboText);
 
 		super.create();
@@ -131,6 +156,8 @@ class PlayState extends FlxState
 
 				for (i in 0...12)
 				{
+					if (notes.charAt(0) == "E")
+						gotoScoreState(Std.int(score), criticalNum, fastNum, lateNum, noteNum - (criticalNum + fastNum + lateNum), maxCombo);
 					if (notes.charAt(i) != "0")
 					{
 						noteGroup.add(new Note(startNotePos + (85 * i), 0, i, Std.parseInt(notes.charAt(i))));
@@ -162,11 +189,6 @@ class PlayState extends FlxState
 		FlxG.overlap(criticalBox, noteGroup, checkCritical);
 		FlxG.overlap(lateBox, noteGroup, checkLate);
 		FlxG.overlap(underLine, noteGroup, missDestroy);
-		/*
-			if (back)
-			{
-				remove(this);
-		}*/
 	}
 
 	function checkMiss(missBox:FlxSprite, note:Note)
@@ -211,8 +233,11 @@ class PlayState extends FlxState
 
 		if (pressed)
 		{
-			updateScore("Fast");
+			score += oneNoteScore / 2;
 			combo++;
+			fastNum++;
+
+			updateScore("Fast");
 			note.kill();
 			noteGroup.remove(note);
 		}
@@ -237,8 +262,11 @@ class PlayState extends FlxState
 
 		if (pressed)
 		{
-			updateScore("Critical");
+			score += oneNoteScore;
 			combo++;
+			criticalNum++;
+
+			updateScore("Critical");
 			note.kill();
 			noteGroup.remove(note);
 		}
@@ -263,8 +291,11 @@ class PlayState extends FlxState
 
 		if (pressed)
 		{
-			updateScore("Late");
+			score += oneNoteScore / 2;
 			combo++;
+			lateNum++;
+
+			updateScore("Late");
 			note.kill();
 			noteGroup.remove(note);
 		}
@@ -272,16 +303,36 @@ class PlayState extends FlxState
 
 	function missDestroy(underLine:FlxSprite, note:Note)
 	{
+
 		//judgeGroup.members[Std.int(note.startKey + (note.type / 2))].animation.stop();
 		//judgeGroup.members[Std.int(note.startKey + (note.type/2))].animation.play("crit");
-		note.kill();
+
+		if (combo > maxCombo)
+		{
+			maxCombo = combo;
+		}
+		combo = 0;
+
 		updateScore("Miss");
+
+		note.kill();
 		noteGroup.remove(note);
 	}
 
 	function updateScore(result:String)
 	{
 		debugText.text = result;
+		if (noteNum == criticalNum)
+			score = 10000000;
+		scoreText.text = Std.string(Std.int(score));
 		comboText.text = Std.string(combo);
+	}
+
+	function gotoScoreState(score:Int, critical:Int, fast:Int, late:Int, miss:Int, maxCombo:Int)
+	{
+		Timer.delay(function()
+		{
+			FlxG.switchState(new ScoreState(score, critical, fast, late, miss, maxCombo));
+		}, 3000);
 	}
 }

@@ -42,7 +42,7 @@ class SelectState extends FlxState
 
 		// TODO
 		// Change BackGround Image
-		var bg:FlxSprite = new FlxSprite(0, 0).loadGraphic(Paths.image('menuBGBlue'));
+		var bg:FlxSprite = new FlxSprite(0, 0).loadGraphic(Paths.image('select_state'));
 		add(bg);
 
 		songNameList = new FlxTypedGroup<FlxText>();
@@ -63,14 +63,14 @@ class SelectState extends FlxState
 			songInfoList.add(songInfo);
 		}
 
-		scoreText = new FlxText(FlxG.width * 0.7, 5, 0, "", 32);
+		scoreText = new FlxText(FlxG.width * 0.7, "", 32);
 		scoreText.autoSize = false;
 		scoreText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, RIGHT);
 		scoreText.alignment = RIGHT;
 
 		var scoreBG:FlxSprite = new FlxSprite(scoreText.x - 6, 0).makeGraphic(Std.int(FlxG.width * 0.35), 66, 0xFF000000);
 		scoreBG.alpha = 0.6;
-		add(scoreBG);
+		// add(scoreBG);
 
 		diffText = new FlxText(scoreText.x, scoreText.y + 36, 0, "", 24);
 		diffText.font = scoreText.font;
@@ -145,7 +145,7 @@ class SelectState extends FlxState
 			// PlayState.SONG = Song.loadFromJson(poop, songs[curSelected].songName.toLowerCase());
 			// trace('CUR WEEK' + PlayState.storyWeek);
 			// LoadingState.loadAndSwitchState(new PlayState());
-			FlxG.switchState(new PlayState());
+			FlxG.switchState(new LoadingState(songs[curSelected], curDifficulty));
 		}
 	}
 

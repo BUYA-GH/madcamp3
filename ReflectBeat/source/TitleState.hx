@@ -1,24 +1,35 @@
 package;
 
-import flixel.util.FlxAxes;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.text.FlxText;
 import flixel.ui.FlxButton;
+import flixel.util.FlxAxes;
+import flixel.util.FlxColor;
 
 class TitleState extends FlxState
 {
 	var playButton:FlxButton;
 	var fullscreenButton:FlxButton;
+	var titleText:FlxText;
 
 	override public function create()
 	{
-		var bg:FlxSprite = new FlxSprite(0, 0).loadGraphic(Paths.image('menuBG'));
+		var bg:FlxSprite = new FlxSprite(0, 0).loadGraphic(Paths.image('title_sum'));
 		add(bg);
 
 		playButton = new FlxButton(0, 0, "Press Enter", clickPlay);
 		playButton.screenCenter();
 		add(playButton);
+
+		titleText = new FlxText(600, 180, "Title");
+		titleText.setFormat(Paths.font("DREAMS.ttf"), 32, FlxColor.WHITE);
+		add(titleText);
+
+		fullscreenButton = new FlxButton(0, 200, FlxG.fullscreen ? "FULLSCREEN" : "WINDOWED", clickFullscreen);
+		fullscreenButton.screenCenter(FlxAxes.X);
+		add(fullscreenButton);
 
 		super.create();
 	}
@@ -34,5 +45,11 @@ class TitleState extends FlxState
 	function clickPlay()
 	{
 		FlxG.switchState(new SelectState());
+	}
+
+	function clickFullscreen()
+	{
+		FlxG.fullscreen = !FlxG.fullscreen;
+		fullscreenButton.text = FlxG.fullscreen ? "FULLSCREEN" : "WINDOWED";
 	}
 }
