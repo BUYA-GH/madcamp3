@@ -129,6 +129,8 @@ class PlayState extends FlxState
 
 				for (i in 0...12)
 				{
+					if (notes.charAt(0) == "E")
+						break;
 					if (notes.charAt(i) != "0")
 					{
 						noteGroup.add(new Note(startNotePos + (85 * i), 0, i, Std.parseInt(notes.charAt(i))));
@@ -151,7 +153,7 @@ class PlayState extends FlxState
 		var key10:Bool = FlxG.keys.justPressed.LBRACKET;
 		var key11:Bool = FlxG.keys.justPressed.RBRACKET;
 		keyInput = [key0, key1, key2, key3, key4, key5, key6, key7, key8, key9, key10, key11];
-		var back:Bool = FlxG.keys.justPressed.ESCAPE || FlxG.keys.justPressed.BACKSLASH;
+		// var back:Bool = FlxG.keys.justPressed.ESCAPE || FlxG.keys.justPressed.BACKSLASH;
 
 		// conductor.prevTime = conductor.curTime;
 		conductor.curTime += elapsed;

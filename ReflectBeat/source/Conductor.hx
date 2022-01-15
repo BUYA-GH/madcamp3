@@ -25,7 +25,6 @@ class Conductor
 	var songname:String;
 	var difficulty:Int;
 
-	var musicPath:String;
 	var scorePath:String;
 
 	var songInfo:SongData;
@@ -49,11 +48,11 @@ class Conductor
 
 		if (difficulty == 0)
 		{
-			scorePath = "assets/data/" + songname.toLowerCase() + "/easy.json";
+			scorePath = Paths.json(songname.toLowerCase() + "/easy");
 		}
 		else if (difficulty == 1)
 		{
-			scorePath = "assets/data/" + songname.toLowerCase() + "/hard.json";
+			scorePath = Paths.json(songname.toLowerCase() + "/hard");
 		}
 
 		var rawJson = Assets.getText(scorePath).trim();
@@ -91,8 +90,7 @@ class Conductor
 	{
 		if (curSecTime <= curTime && FlxG.sound.music == null)
 		{
-			musicPath = "assets/music/" + songname.toLowerCase + "/song.mp3";
-			FlxG.sound.playMusic(musicPath, 1, false);
+			FlxG.sound.playMusic(Paths.music(songname.toLowerCase() + "/song"), 0);
 			isStart = true;
 		}
 	}
