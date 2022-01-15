@@ -48,7 +48,7 @@ class SelectState extends FlxState
 		songNameList = new FlxTypedGroup<FlxText>();
 		songInfoList = new FlxTypedGroup<FlxText>();
 		add(songNameList);
-		add(songInfoList);
+		// add(songInfoList);
 
 		// for check - erase this later
 		var playButton:FlxButton = new FlxButton(0, 0, songs[songs.length - 1].songname, clickPlay);
@@ -57,23 +57,19 @@ class SelectState extends FlxState
 
 		for (i in 0...songs.length)
 		{
-			var songName:FlxText = new FlxText(0, (70 * i) + 30, songs[i].songname);
+			var songName:FlxText = new FlxText(0, 100 * i, songs[i].songname);
 			songNameList.add(songName);
-			var songInfo:FlxText = new FlxText(songName.x, songName.y + 30, songs[i].composer + " " + Std.string(songs[i].bpm), 20);
+			var songInfo:FlxText = new FlxText(songName.x, songName.y + 60, songs[i].composer + " " + Std.string(songs[i].bpm), 20);
 			songInfoList.add(songInfo);
 		}
 
-		scoreText = new FlxText(FlxG.width * 0.7, "", 32);
-		scoreText.autoSize = false;
-		scoreText.setFormat(Paths.font("DREAMS.ttf"), 32, FlxColor.WHITE, RIGHT);
-		scoreText.alignment = RIGHT;
+		// scoreText = new FlxText(FlxG.width * 0.7, "", 32);
+		// scoreText.autoSize = false;
+		// scoreText.setFormat(Paths.font("DREAMS.ttf"), 32, FlxColor.WHITE, RIGHT);
+		// scoreText.alignment = RIGHT;
 
-		var scoreBG:FlxSprite = new FlxSprite(scoreText.x - 6, 0).makeGraphic(Std.int(FlxG.width * 0.35), 66, 0xFF000000);
-		scoreBG.alpha = 0.6;
-		// add(scoreBG);
-
-		diffText = new FlxText(scoreText.x, scoreText.y + 36, 0, "", 24);
-		diffText.font = scoreText.font;
+		diffText = new FlxText(600, 0, "", 24);
+		diffText.setFormat(Paths.font("DREAMS.ttf"), FlxColor.WHITE, RIGHT);
 		add(diffText);
 
 		add(scoreText);
@@ -108,7 +104,7 @@ class SelectState extends FlxState
 		if (Math.abs(lerpScore - intendedScore) <= 10)
 			lerpScore = intendedScore;
 
-		scoreText.text = "PERSONAL BEST:" + lerpScore;
+		// scoreText.text = "PERSONAL BEST:" + lerpScore;
 		var up:Bool = FlxG.keys.justPressed.UP;
 		var down:Bool = FlxG.keys.justPressed.DOWN;
 		var left:Bool = FlxG.keys.justPressed.LEFT;
@@ -224,7 +220,7 @@ class SelectState extends FlxState
 			var targetY:Int = index - curSelected;
 			index++;
 
-			item.y = (70 * index) + 30 - 30 * targetY;
+			item.y = (100 * index) + 100 * targetY;
 
 			if (targetY == 0)
 			{

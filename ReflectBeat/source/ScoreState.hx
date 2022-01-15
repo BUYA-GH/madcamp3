@@ -43,6 +43,9 @@ class ScoreState extends FlxState
 
 	override public function create()
 	{
+		var bg:FlxSprite = new FlxSprite(0, 0).loadGraphic(Paths.image('score_state'));
+		add(bg);
+
 		scoreText = new FlxText(500, 100, "0");
 		scoreText.setFormat(Paths.font("DREAMS.ttf"), 10, FlxColor.WHITE);
 		add(scoreText);
