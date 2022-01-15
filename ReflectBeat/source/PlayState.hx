@@ -9,8 +9,8 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import haxe.Timer;
-//import js.html.audio.ScriptProcessorNode;
 
+// import js.html.audio.ScriptProcessorNode;
 class PlayState extends FlxState
 {
 	var songname:String;
@@ -78,7 +78,7 @@ class PlayState extends FlxState
 	{
 		noteWidth = Std.int(backgroundWidth / 12);
 
-		background = new FlxSprite(startNotePos, 0).makeGraphic(backgroundWidth, backgroundHeight, FlxColor.GRAY);
+		background = new FlxSprite(0, 0).loadGraphic(Paths.image('play_state'), backgroundWidth, backgroundHeight);
 		add(background);
 
 		criticalBoxPos = Std.int(hitBoxPos + (hitBoxSize / 2) - (criticalBoxSize / 2) - (noteHeight / 2));
@@ -107,7 +107,7 @@ class PlayState extends FlxState
 		add(hitBox);
 
 		underLine = new FlxSprite(startNotePos, backgroundHeight - underLineSize).makeGraphic(backgroundWidth, underLineSize, FlxColor.BLACK);
-		//underLine = new FlxSprite(startNotePos, 680).makeGraphic(backgroundWidth, underLineSize, FlxColor.BLACK);
+		// underLine = new FlxSprite(startNotePos, 680).makeGraphic(backgroundWidth, underLineSize, FlxColor.BLACK);
 		add(underLine);
 
 		noteGroup = new FlxTypedGroup<Note>();
@@ -117,8 +117,8 @@ class PlayState extends FlxState
 		add(judgeGroup);
 		for (i in (0...12))
 		{
-			var xJudgePoint:Int = Std.int(startNotePos + i*noteWidth + (noteWidth/2) - (120/2));
-			var yJudgePoint:Int = Std.int(hitBoxPos + (hitBoxSize/2) - (120/2));
+			var xJudgePoint:Int = Std.int(startNotePos + i * noteWidth + (noteWidth / 2) - (120 / 2));
+			var yJudgePoint:Int = Std.int(hitBoxPos + (hitBoxSize / 2) - (120 / 2));
 			var judgeAnim = new FlxSprite(xJudgePoint, yJudgePoint).loadGraphic("assets/images/judge.png", true, 120, 120);
 			judgeAnim.animation.add("crit", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], 24, false);
 			// judgeAnim.animation.add("near", [7, 8, 9, 10, 11, 12, 13], 30, false);
@@ -156,7 +156,12 @@ class PlayState extends FlxState
 				for (i in 0...12)
 				{
 					if (notes.charAt(0) == "E")
-						gotoScoreState(Std.int(score), criticalNum, fastNum, lateNum, noteNum - (criticalNum + fastNum + lateNum), maxCombo);
+
+						Timer.delay(function()
+						{
+							gotoScoreState();
+						}, 3000);
+
 					else if (notes.charAt(i) != "0")
 					{
 						noteGroup.add(new Note(startNotePos + (85 * i), 0, i, Std.parseInt(notes.charAt(i))));
@@ -183,7 +188,7 @@ class PlayState extends FlxState
 
 		// conductor.prevTime = conductor.curTime;
 		conductor.curTime += elapsed;
-		//FlxG.overlap(upperMissBox, noteGroup, checkMiss);
+		// FlxG.overlap(upperMissBox, noteGroup, checkMiss);
 		FlxG.overlap(fastBox, noteGroup, checkFast);
 		FlxG.overlap(criticalBox, noteGroup, checkCritical);
 		FlxG.overlap(lateBox, noteGroup, checkLate);
@@ -303,9 +308,8 @@ class PlayState extends FlxState
 
 	function missDestroy(underLine:FlxSprite, note:Note)
 	{
-
-		//judgeGroup.members[Std.int(note.startKey + (note.type / 2))].animation.stop();
-		//judgeGroup.members[Std.int(note.startKey + (note.type/2))].animation.play("crit");
+		// judgeGroup.members[Std.int(note.startKey + (note.type / 2))].animation.stop();
+		// judgeGroup.members[Std.int(note.startKey + (note.type/2))].animation.play("crit");
 
 		if (combo > maxCombo)
 		{
@@ -328,11 +332,8 @@ class PlayState extends FlxState
 		comboText.text = Std.string(combo);
 	}
 
-	function gotoScoreState(score:Int, critical:Int, fast:Int, late:Int, miss:Int, maxCombo:Int)
+	function gotoScoreState()
 	{
-		Timer.delay(function()
-		{
-			FlxG.switchState(new ScoreState(score, critical, fast, late, miss, maxCombo));
-		}, 3000);
+		FlxG.switchState(new ScoreState(Std.int(score), criticalNum, fastNum, lateNum, noteNum - (criticalNum + fastNum + lateNum), maxCombo));
 	}
 }

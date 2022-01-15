@@ -16,7 +16,7 @@ class TitleState extends FlxState
 
 	override public function create()
 	{
-		var bg:FlxSprite = new FlxSprite(0, 0).loadGraphic(Paths.image('title_sum'));
+		var bg:FlxSprite = new FlxSprite(0, 0).loadGraphic(Paths.image('title_state'));
 		add(bg);
 
 		playButton = new FlxButton(0, 0, "Press Enter", clickPlay);
