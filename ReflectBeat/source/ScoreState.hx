@@ -7,8 +7,8 @@ import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
 import haxe.macro.Compiler.IncludePosition;
-//import js.lib.Intl;
 
+// import js.lib.Intl;
 class ScoreState extends FlxState
 {
 	var score:Int;
@@ -59,7 +59,7 @@ class ScoreState extends FlxState
 		lateText.setFormat(Paths.font("DREAMS.ttf"), 10, FlxColor.WHITE);
 		add(lateText);
 
-		missText = new FlxText(500, 300, Std.string(maxCombo));
+		missText = new FlxText(500, 300, Std.string(miss));
 		missText.setFormat(Paths.font("DREAMS.ttf"), 10, FlxColor.WHITE);
 		add(missText);
 

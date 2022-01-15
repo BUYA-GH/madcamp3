@@ -23,7 +23,7 @@ class LoadingState extends FlxState
 
 	override public function create()
 	{
-		var bg:FlxSprite = new FlxSprite(0, 0).loadGraphic(Paths.image('menuBGMagenta'));
+		var bg:FlxSprite = new FlxSprite(0, 0).loadGraphic(Paths.image('loading_state'));
 		add(bg);
 
 		var songName:FlxText = new FlxText(300, 180, songInfo.songname);
