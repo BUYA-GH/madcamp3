@@ -113,7 +113,6 @@ class PlayState extends FlxState
 		noteGroup = new FlxTypedGroup<Note>();
 		add(noteGroup);
 
-
 		judgeGroup = new FlxTypedGroup<FlxSprite>();
 		add(judgeGroup);
 		for (i in (0...12))
@@ -158,7 +157,7 @@ class PlayState extends FlxState
 				{
 					if (notes.charAt(0) == "E")
 						gotoScoreState(Std.int(score), criticalNum, fastNum, lateNum, noteNum - (criticalNum + fastNum + lateNum), maxCombo);
-					if (notes.charAt(i) != "0")
+					else if (notes.charAt(i) != "0")
 					{
 						noteGroup.add(new Note(startNotePos + (85 * i), 0, i, Std.parseInt(notes.charAt(i))));
 					}
@@ -225,6 +224,7 @@ class PlayState extends FlxState
 			if (keyInput[i])
 			{
 				pressed = true;
+				judgeGroup.members[i].setGraphicSize(120 * size, 120);
 				judgeGroup.members[i].animation.stop();
 				judgeGroup.members[i].animation.play("crit");
 				break;
