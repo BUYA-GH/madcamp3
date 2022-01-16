@@ -43,6 +43,9 @@ class ScoreState extends FlxState
 
 	override public function create()
 	{
+		FlxG.sound.pause();
+		FlxG.sound.music = null;
+
 		scoreText = new FlxText(500, 100, "0");
 		scoreText.setFormat(Paths.font("DREAMS.ttf"), 10, FlxColor.WHITE);
 		add(scoreText);

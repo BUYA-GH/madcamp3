@@ -15,12 +15,14 @@ class LoadingState extends FlxState
 	var loadingTime:Float = 0;
 	var speed:Float = 1000;
 	var speedText:FlxText;
+	var isAuto:Bool;
 
-	public function new(songInfo:SongMetadata, difficulty:Int)
+	public function new(songInfo:SongMetadata, difficulty:Int, isAuto:Bool)
 	{
 		super();
 		this.songInfo = songInfo;
 		this.difficulty = difficulty;
+		this.isAuto = isAuto;
 	}
 
 	override public function create()
@@ -54,7 +56,7 @@ class LoadingState extends FlxState
 		var pressedEnter:Bool = FlxG.keys.justPressed.ENTER;
 		if (pressedEnter || loadingTime > 3)
 		{
-			FlxG.switchState(new PlayState(songInfo.songname, difficulty, speed));
+			FlxG.switchState(new PlayState(songInfo.songname, difficulty, speed, isAuto));
 		}
 
 		if(!pressedUpandDown)

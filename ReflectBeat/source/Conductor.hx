@@ -27,9 +27,9 @@ class Conductor
 
 	var scorePath:String;
 
-	var songInfo:SongData;
-	var secLength:Int;
-	var secIndex:Int = 0;
+	public var songInfo:SongData;
+	public var secLength:Int;
+	public var secIndex:Int = 0;
 
 	public var noteNum:Int = 0;
 
@@ -67,8 +67,7 @@ class Conductor
 		songInfo = cast Json.parse(rawJson);
 		secLength = songInfo.sections.length;
 		curSecTime = (songInfo.sync / 1000) - (670 / notespeed);
-
-
+		
 		var read:String = "";
 		var readIndex:Int = 0;
 		while (true)
@@ -91,8 +90,6 @@ class Conductor
 
 	public function playSong()
 	{
-		trace(curSecTime);
-		trace(curTime);
 		if (curSecTime <= curTime && FlxG.sound.music == null)
 		{
 			//trace(songname.toLowerCase());
@@ -100,7 +97,7 @@ class Conductor
 			//FlxG.sound.playMusic("assets/music/" + songname.toLowerCase() + "/song.mp3", 0);
 			curTime = 0.0;
 			curSecTime = 0.0;
-			FlxG.sound.playMusic(Paths.music(songname.toLowerCase() + "/song"), 1);
+			FlxG.sound.playMusic(Paths.music(songname.toLowerCase() + "/song"), 1, false);
 			isStart = true;
 		}
 	}

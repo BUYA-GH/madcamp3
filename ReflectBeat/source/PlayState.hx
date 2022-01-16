@@ -1,10 +1,10 @@
 package;
 
+import flixel.ui.FlxBar;
 import flixel.system.FlxSound;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
-import flixel.addons.plugin.FlxScrollingText.ScrollingTextData;
 import flixel.addons.ui.FlxUISprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.text.FlxText;
@@ -63,6 +63,8 @@ class PlayState extends FlxState
 	var scoreText:FlxText;
 	var comboText:FlxText;
 
+	var songProgressBar:FlxBar;
+
 	var keyInput:Array<Bool>;
 
 	var startNotePos:Float = 90;
@@ -71,13 +73,15 @@ class PlayState extends FlxState
 	var tickSound:FlxSound;
 
 	var speed:Float;
+	var isAuto:Bool;
 
-	public function new(songname:String, difficulty:Int, speed:Float)
+	public function new(songname:String, difficulty:Int, speed:Float, isAuto:Bool)
 	{
 		super();
 		this.songname = songname;
 		this.difficulty = difficulty;
 		this.speed = speed;
+		this.isAuto = isAuto;
 	}
 
 	override public function create()
@@ -118,8 +122,14 @@ class PlayState extends FlxState
 		hitBox = new FlxSprite(startNotePos, hitBoxPos - (hitBoxSize/2)).loadGraphic("assets/images/JudgeLaser.png", backgroundWidth, hitBoxSize);
 		add(hitBox);
 
-		underLine = new FlxSprite(startNotePos, lateBoxPos + 21).makeGraphic(backgroundWidth, underLineSize, FlxColor.BLACK);
-		// underLine = new FlxSprite(startNotePos, 680).makeGraphic(backgroundWidth, underLineSize, FlxColor.BLACK);
+		if(!isAuto) 
+		{
+			underLine = new FlxSprite(startNotePos, lateBoxPos + 21).makeGraphic(backgroundWidth, underLineSize, FlxColor.BLACK);
+		}
+		else
+		{
+			underLine = new FlxSprite(startNotePos, 680 - 11).makeGraphic(backgroundWidth, underLineSize, FlxColor.BLACK);
+		}
 		add(underLine);
 
 		noteGroup = new FlxTypedGroup<Note>();
@@ -148,6 +158,11 @@ class PlayState extends FlxState
 		add(scoreText);
 		add(comboText);
 
+		songProgressBar = new FlxBar(140, 5, LEFT_TO_RIGHT, 1000, 5);
+		songProgressBar.createFilledBar(0xff1a33ff, 0xff74dfff, false, FlxColor.TRANSPARENT);
+		songProgressBar.value = 0;
+		add(songProgressBar);
+
 		tickSound = FlxG.sound.load('assets/sounds/tick.wav', 1, false);
 
 		super.create();
@@ -155,35 +170,40 @@ class PlayState extends FlxState
 
 	override public function update(elapsed:Float)
 	{
-		super.update(elapsed);
+		super.update(elapsed);		
 
 		if (!conductor.isStart)
 		{
+			//trace("am I Start?");
 			conductor.playSong();
 		}
 		
 		if( conductor.isStart)
 		{
-			trace(conductor.curSecTime);
-			trace(conductor.curTime);
 			if (conductor.curSecTime <= conductor.curTime)
 			{
 				var notes = conductor.readSection();
+				songProgressBar.value = (conductor.secIndex / conductor.secLength) * 100;
 
-				for (i in 0...12)
+				if (notes.charAt(0) == "E")
 				{
-					if (notes.charAt(0) == "E")
-
-						Timer.delay(function()
-						{
-							gotoScoreState();
-						}, 3000);
-
-					else if (notes.charAt(i) != "0")
+					Timer.delay(function()
 					{
-						noteGroup.add(new Note(startNotePos + (85 * i), 0, i, Std.parseInt(notes.charAt(i)), speed));
+						gotoScoreState();
+					}, 3000);
+				}
+				else
+				{
+					for (i in 0...12)
+					{
+						if (notes.charAt(i) != "0")
+						{
+							//trace("Note add");
+							noteGroup.add(new Note(startNotePos + (85 * i), 0, i, Std.parseInt(notes.charAt(i)), speed));
+						}
 					}
 				}
+				
 			}
 		}
 
@@ -328,20 +348,33 @@ class PlayState extends FlxState
 
 	function missDestroy(underLine:FlxSprite, note:Note)
 	{
-		// judgeGroup.members[Std.int(note.startKey + (note.type / 2))].animation.stop();
-		// judgeGroup.members[Std.int(note.startKey + (note.type/2))].animation.play("crit");
-
-		if (combo > maxCombo)
+		if(isAuto)
 		{
-			maxCombo = combo;
+			tickSound.play(true);
+
+			judgeGroup.members[Std.int(note.startKey + (note.type / 2))].animation.stop();
+			judgeGroup.members[Std.int(note.startKey + (note.type / 2))].animation.play("crit");
+			score += oneNoteScore;
+			combo++;
+			criticalNum++;
+
+			updateScore("Critical");
 		}
-		combo = 0;
+		else
+		{
+			if (combo > maxCombo)
+			{
+				maxCombo = combo;
+			}
+			combo = 0;
 
-		updateScore("Miss");
-
+			updateScore("Miss");
+		}
+			
 		note.kill();
 		noteGroup.remove(note);
 	}
+
 
 	function updateScore(result:String)
 	{
