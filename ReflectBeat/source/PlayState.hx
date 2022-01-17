@@ -146,7 +146,7 @@ class PlayState extends FlxState
 			judgeAnim.animation.add("near", [15, 16, 17, 18, 19, 20, 21, 22, 23], 24, false);
 			judgeGroup.add(judgeAnim);
 		}
-		
+
 		conductor = new Conductor(songname, difficulty, speed);
 		noteNum = conductor.noteNum;
 		oneNoteScore = 10000000 / noteNum;
@@ -193,10 +193,12 @@ class PlayState extends FlxState
 			conductor.playSong();
 		}
 
-		if( conductor.isStart == 1)
+		if (conductor.isStart == 1)
 		{
+			if (conductor.minusSecTime + conductor.curTime >= 0.0)
+				conductor.playMinusSong();
 			if (conductor.curSecTime <= conductor.curTime)
-			{				
+			{
 				var notes = conductor.readSection();
 				songProgressBar.value = (conductor.secIndex / conductor.secLength) * 100;
 
@@ -388,7 +390,6 @@ class PlayState extends FlxState
 	{
 		var startKey:Int = note.startKey;
 		var size:Int = note.type;
-		var longPressed:Bool = false;
 
 		if (!note.isLongMiddle)
 		{
@@ -406,14 +407,14 @@ class PlayState extends FlxState
 					updateMaxCombo();
 					fastNum++;
 					tickSound.play(true);
+
 					judgeGroup.members[i].animation.stop();
 					judgeGroup.members[i].animation.play("near");
           
-         			updateScore("Fast");
+         	updateScore("Fast");
 					note.kill();
 					noteGroup.remove(note);
-         			break;
-        		}
+         	break;
 			}
 		}
 	}
@@ -589,7 +590,7 @@ class PlayState extends FlxState
 
 	function updateScore(result:String)
 	{
-		//debugText.text = result;
+		// debugText.text = result;
 		if (noteNum == criticalNum)
 			score = 10000000;
 		scoreText.text = Std.string(Std.int(score));
