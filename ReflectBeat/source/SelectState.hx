@@ -111,6 +111,7 @@ class SelectState extends FlxState
 		var right:Bool = FlxG.keys.justPressed.RIGHT;
 		var back:Bool = FlxG.keys.justPressed.ESCAPE || FlxG.keys.justPressed.BACKSLASH;
 		var accepted:Bool = FlxG.keys.justPressed.ENTER;
+		var autoAccepted:Bool = FlxG.keys.justPressed.A;
 
 		if (up)
 		{
@@ -141,7 +142,11 @@ class SelectState extends FlxState
 			// PlayState.SONG = Song.loadFromJson(poop, songs[curSelected].songName.toLowerCase());
 			// trace('CUR WEEK' + PlayState.storyWeek);
 			// LoadingState.loadAndSwitchState(new PlayState());
-			FlxG.switchState(new LoadingState(songs[curSelected], curDifficulty));
+			FlxG.switchState(new LoadingState(songs[curSelected], curDifficulty, false));
+		}
+		if(autoAccepted)
+		{
+			FlxG.switchState(new LoadingState(songs[curSelected], curDifficulty, true));
 		}
 	}
 

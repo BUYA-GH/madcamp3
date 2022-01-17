@@ -4,7 +4,7 @@
     "difficulty":"Hard",
     "level":12,
     "bpm":160,
-    "sync":0.090,
+    "sync":500,
     "sections":[
         "-4",
         "000000030000",

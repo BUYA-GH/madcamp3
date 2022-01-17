@@ -7,7 +7,6 @@ import flixel.util.FlxColor;
 class Note extends FlxSprite
 {
 	public var noteSpeed:Float = 1000;
-	var canPress:Bool;
 
 	public var startKey:Int;
 	public var type:Int;

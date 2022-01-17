@@ -43,6 +43,10 @@ class ScoreState extends FlxState
 
 	override public function create()
 	{
+
+		FlxG.sound.pause();
+		FlxG.sound.music = null;
+
 		var bg:FlxSprite = new FlxSprite(0, 0).loadGraphic(Paths.image('score_state'));
 		add(bg);
 
