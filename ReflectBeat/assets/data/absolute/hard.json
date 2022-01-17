@@ -1,11 +1,10 @@
 {
     "title": "Absolute Zero Point",
-    "artist": "Kaneko Chijaru",
+    "artist": "Kaneko Chiharu",
     "difficulty": "Hard",
     "level": 12,
     "bpm": 209,
-    "sync": 1,
-    "progress": 37,
+    "sync": 2500,
     "sections": [
         "-4",
         "000000000000",
@@ -109,7 +108,7 @@
         "-16",
         "300000300000",
         "000000000000",
-        "000000300600",
+        "000000300300",
         "000000000300",
         "600000000000",
         "000000000000",
