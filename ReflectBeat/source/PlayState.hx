@@ -143,6 +143,7 @@ class PlayState extends FlxState
 
 			var judgeAnim = new FlxSprite(xJudgePoint, yJudgePoint).loadGraphic("assets/images/judge.png", true, 120, 120);
 			judgeAnim.animation.add("crit", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], 24, false);
+			judgeAnim.animation.add("near", [15, 16, 17, 18, 19, 20, 21, 22, 23], 24, false);
 			judgeGroup.add(judgeAnim);
 		}
 		
@@ -172,10 +173,7 @@ class PlayState extends FlxState
 		maxComboText.setFormat(Paths.font("DREAMS.ttf"), 3, FlxColor.WHITE, RIGHT);
 		add(maxComboText);
 
-		debugText = new FlxText(1110, 300, 0, "", 15);
 		comboText = new FlxText(1110, 360, 0, "0", 15);
-
-		add(debugText);
 		add(comboText);
 
 		tickSound = FlxG.sound.load('assets/sounds/tick.wav', 1, false);
@@ -189,7 +187,6 @@ class PlayState extends FlxState
 	{
 		super.update(elapsed);
 
-		debugText.text = Std.string(elapsed);
 
 		if (conductor.isStart == 0)
 		{
@@ -406,18 +403,17 @@ class PlayState extends FlxState
 
 					score += oneNoteScore / 2;
 					combo++;
+					updateMaxCombo();
 					fastNum++;
 					tickSound.play(true);
-          
-          judgeGroup.members[i].setGraphicSize(120 * size, 120);
 					judgeGroup.members[i].animation.stop();
-					judgeGroup.members[i].animation.play("crit");
+					judgeGroup.members[i].animation.play("near");
           
-          updateScore("Fast");
+         			updateScore("Fast");
 					note.kill();
 					noteGroup.remove(note);
-          break;
-        }
+         			break;
+        		}
 			}
 		}
 	}
@@ -441,10 +437,9 @@ class PlayState extends FlxState
 
 					score += oneNoteScore;
 					combo++;
+					updateMaxCombo();
 					criticalNum++;
 					tickSound.play(true);
-
-					judgeGroup.members[i].setGraphicSize(120 * size, 120);
 					judgeGroup.members[i].animation.stop();
 					judgeGroup.members[i].animation.play("crit");
 
@@ -482,6 +477,7 @@ class PlayState extends FlxState
 					updateScore("Critical");
 					score += oneNoteScore;
 					combo++;
+					updateMaxCombo();
 					criticalNum++;
 				}
 
@@ -517,11 +513,11 @@ class PlayState extends FlxState
 
 					score += oneNoteScore / 2;
 					combo++;
+					updateMaxCombo();
 					lateNum++;
 					tickSound.play(true);
-					judgeGroup.members[i].setGraphicSize(120 * size, 120);
 					judgeGroup.members[i].animation.stop();
-					judgeGroup.members[i].animation.play("crit");
+					judgeGroup.members[i].animation.play("near");
 
 					updateScore("Late");
 					note.kill();
@@ -544,16 +540,13 @@ class PlayState extends FlxState
 				judgeGroup.members[Std.int(note.startKey + (note.type / 2))].animation.play("crit");
 				score += oneNoteScore;
 				combo++;
+				updateMaxCombo();
 				criticalNum++;
 
 				updateScore("Critical");
 			}
 			else
 			{
-				if (combo > maxCombo)
-				{
-					maxCombo = combo;
-				}
 				combo = 0;
 				missNum++;
 				updateScore("Miss");
@@ -568,15 +561,12 @@ class PlayState extends FlxState
 					score += oneNoteScore;
 					combo++;
 					criticalNum++;
+					updateMaxCombo();
 
 					updateScore("Critical");
 				}
 				else
 				{
-					if (combo > maxCombo)
-					{
-						maxCombo = combo;
-					}
 					combo = 0;
 					missNum++;
 
@@ -586,6 +576,15 @@ class PlayState extends FlxState
 		}
 		note.kill();
 		noteGroup.remove(note);
+	}
+
+	function updateMaxCombo()
+	{
+		if(maxCombo < combo)
+		{
+			maxCombo = combo;
+			maxComboText.text = Std.string(maxCombo);
+		}
 	}
 
 	function updateScore(result:String)
