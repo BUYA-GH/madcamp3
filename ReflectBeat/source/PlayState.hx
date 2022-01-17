@@ -61,6 +61,7 @@ class PlayState extends FlxState
 
 	var debugText:FlxText;
 	var scoreText:FlxText;
+	var maxComboText:FlxText;
 	var comboText:FlxText;
 
 	var upperHud:FlxSprite;
@@ -98,26 +99,17 @@ class PlayState extends FlxState
 
 		criticalBoxPos = Std.int(hitBoxPos - 3*(criticalBoxSize/4));
 		criticalBox = new FlxSprite(startNotePos, criticalBoxPos).makeGraphic(backgroundWidth, criticalBoxSize, FlxColor.TRANSPARENT);
-
-		//criticalBoxPos = Std.int(hitBoxPos + (hitBoxSize / 2) - (criticalBoxSize / 2) - (noteHeight / 2));
-		//criticalBox = new FlxUISprite(startNotePos, criticalBoxPos).makeGraphic(backgroundWidth, criticalBoxSize, FlxColor.TRANSPARENT);
-		// makeGraphic(backgroundWidth, criticalBoxSize, FlxColor.GREEN);
-		// loadGraphic("assets/images/JudgeLaser.png"
-		// criticalBox = new FlxUISprite(startNotePos, criticalBoxPos).makeGraphic(backgroundWidth, criticalBoxSize, FlxColor.TRANSPARENT);
 		add(criticalBox);
 
 		fastBoxPos = Std.int(criticalBoxPos - fastBoxSize);
 		fastBox = new FlxUISprite(startNotePos, fastBoxPos).makeGraphic(backgroundWidth, fastBoxSize, FlxColor.TRANSPARENT);
-		// fastBox = new FlxUISprite(startNotePos, fastBoxPos).makeGraphic(backgroundWidth, fastBoxSize,oFlxColor.TRANSPARENT);
 		add(fastBox);
 
 		lateBoxPos = Std.int(criticalBoxPos + criticalBoxSize);
 		lateBox = new FlxUISprite(startNotePos, lateBoxPos).makeGraphic(backgroundWidth, lateBoxSize, FlxColor.TRANSPARENT);
-		// lateBox = new FlxUISprite(startNotePos, lateBoxPos).makeGraphic(backgroundWidth, lateBoxSize, FlxColor.TRANSPARENT);
 		add(lateBox);
 
 		upperMissBoxPos = Std.int(fastBoxPos - upperMissBoxSize);
-		// upperMissBox = new FlxUISprite(startNotePos, upperMissBoxPos).makeGraphic(backgroundWidth, upperMissBoxSize, FlxColor.GRAY);
 		upperMissBox = new FlxUISprite(startNotePos, upperMissBoxPos).makeGraphic(backgroundWidth, upperMissBoxSize, FlxColor.TRANSPARENT);
 		add(upperMissBox);
 
@@ -130,7 +122,7 @@ class PlayState extends FlxState
 		}
 		else
 		{
-			underLine = new FlxSprite(startNotePos, 680 - 11).makeGraphic(backgroundWidth, underLineSize, FlxColor.BLACK);
+			underLine = new FlxSprite(startNotePos, 680 + 11).makeGraphic(backgroundWidth, underLineSize, FlxColor.BLACK);
 		}
 		add(underLine);
 
@@ -150,19 +142,12 @@ class PlayState extends FlxState
 			// judgeAnim.animation.add("near", [7, 8, 9, 10, 11, 12, 13], 30, false);
 			judgeGroup.add(judgeAnim);
 		}
+		
 		conductor = new Conductor(songname, difficulty, speed);
 		noteNum = conductor.noteNum;
 		oneNoteScore = 10000000 / noteNum;
 
-		debugText = new FlxText(1110, 300, 0, "", 15);
-		scoreText = new FlxText(1110, 330, 0, "0", 15);
-		comboText = new FlxText(1110, 360, 0, "0", 15);
-
-		add(debugText);
-		add(scoreText);
-		add(comboText);
-
-		upperHud = new FlxSprite(140, 0).loadGraphic('assets/images/upper_hud.png', false, 1000, 80);
+		upperHud = new FlxSprite(0, 0).loadGraphic('assets/images/upper_hud.png', false, 1280, 151);
 		add(upperHud);
 
 		songInfoText = new FlxText(229, 15, 822, "", 20);
@@ -171,10 +156,24 @@ class PlayState extends FlxState
 		songInfoText.text = conductor.songInfo.title + " / " + conductor.songInfo.artist;
 		add(songInfoText);
 
-		songProgressBar = new FlxBar(229, 69, LEFT_TO_RIGHT, 822, 5);
+		songProgressBar = new FlxBar(229, 70, LEFT_TO_RIGHT, 822, 5);
 		songProgressBar.createFilledBar(0xff1a33ff, 0xff74dfff, false, FlxColor.TRANSPARENT);
 		songProgressBar.value = 0;
 		add(songProgressBar);
+
+		scoreText = new FlxText(1100, 110, 170, "0", 5);
+		scoreText.setFormat(Paths.font("DREAMS.ttf"), 5, FlxColor.WHITE, RIGHT);
+		add(scoreText);
+
+		maxComboText = new FlxText(1150, 155, 130, "0", 3);
+		maxComboText.setFormat(Paths.font("DREAMS.ttf"), 3, FlxColor.WHITE, RIGHT);
+		add(maxComboText);
+
+		debugText = new FlxText(1110, 300, 0, "", 15);
+		comboText = new FlxText(1110, 360, 0, "0", 15);
+
+		add(debugText);
+		add(comboText);
 
 		tickSound = FlxG.sound.load('assets/sounds/tick.wav', 1, false);
 
@@ -185,21 +184,23 @@ class PlayState extends FlxState
 	{
 		super.update(elapsed);		
 
+		debugText.text = Std.string(elapsed);
+
 		if (conductor.isStart == 0)
-		{
-			//trace("am I Start?");
+		{	
 			conductor.playSong();
 		}
-		
-		if( conductor.isStart == 1)
+
+		if(conductor.isStart == 1)
 		{
 			if (conductor.curSecTime <= conductor.curTime)
-			{
+			{				
 				var notes = conductor.readSection();
 				songProgressBar.value = (conductor.secIndex / conductor.secLength) * 100;
 
 				if (notes.charAt(0) == "E")
 				{
+					songProgressBar.value = 100;
 					Timer.delay(function()
 					{
 						gotoScoreState();
@@ -211,7 +212,6 @@ class PlayState extends FlxState
 					{
 						if (notes.charAt(i) != "0")
 						{
-							//trace("Note add");
 							noteGroup.add(new Note(startNotePos + (85 * i), 0, i, Std.parseInt(notes.charAt(i)), speed));
 						}
 					}
@@ -296,6 +296,12 @@ class PlayState extends FlxState
 			updateScore("Fast");
 			note.kill();
 			noteGroup.remove(note);
+		
+			if (combo > maxCombo)
+			{
+				maxCombo = combo;
+				maxComboText.text = Std.string(maxCombo);
+			}
 		}
 	}
 
@@ -326,6 +332,12 @@ class PlayState extends FlxState
 			updateScore("Critical");
 			note.kill();
 			noteGroup.remove(note);
+		
+			if (combo > maxCombo)
+			{
+				maxCombo = combo;
+				maxComboText.text = Std.string(maxCombo);
+			}
 		}
 	}
 
@@ -356,6 +368,12 @@ class PlayState extends FlxState
 			updateScore("Late");
 			note.kill();
 			noteGroup.remove(note);
+		
+			if (combo > maxCombo)
+			{
+				maxCombo = combo;
+				maxComboText.text = Std.string(maxCombo);
+			}
 		}
 	}
 
@@ -371,16 +389,17 @@ class PlayState extends FlxState
 			combo++;
 			criticalNum++;
 
+			if (combo > maxCombo)
+			{
+				maxCombo = combo;
+				maxComboText.text = Std.string(maxCombo);
+			}
+
 			updateScore("Critical");
 		}
 		else
 		{
-			if (combo > maxCombo)
-			{
-				maxCombo = combo;
-			}
 			combo = 0;
-
 			updateScore("Miss");
 		}
 			
@@ -391,7 +410,7 @@ class PlayState extends FlxState
 
 	function updateScore(result:String)
 	{
-		debugText.text = result;
+		//debugText.text = result;
 		if (noteNum == criticalNum)
 			score = 10000000;
 		scoreText.text = Std.string(Std.int(score));
