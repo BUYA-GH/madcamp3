@@ -71,7 +71,9 @@ class Conductor
 		songInfo = cast Json.parse(rawJson);
 		secLength = songInfo.sections.length;
 		curSecTime = (songInfo.sync / 1000) - (670 / notespeed);
+
 		if(curSecTime < 0.0) minusSecTime = curSecTime;
+
 		// trace(curSecTime);
 
 		var read:String = "";
@@ -96,9 +98,6 @@ class Conductor
 
 	public function playSong()
 	{
-		// trace(curSecTime);
-		// trace(curTime);
-
 		if (FlxG.sound.music == null && curSecTime >= 0.0)
 		{
 			FlxG.sound.playMusic(Paths.music(songname.toLowerCase() + "/song"), 1, false);
