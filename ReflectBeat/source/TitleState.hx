@@ -19,11 +19,7 @@ class TitleState extends FlxState
 		var bg:FlxSprite = new FlxSprite(0, 0).loadGraphic(Paths.image('title_state'));
 		add(bg);
 
-		playButton = new FlxButton(0, 0, "Press Enter", clickPlay);
-		playButton.screenCenter();
-		add(playButton);
-
-		titleText = new FlxText(600, 180, "Title");
+		titleText = new FlxText(0, 180, "Title");
 		titleText.setFormat(Paths.font("DREAMS.ttf"), 32, FlxColor.WHITE);
 		add(titleText);
 
