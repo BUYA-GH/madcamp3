@@ -39,6 +39,7 @@ class Conductor
 	public var curTime:Float = 0.0;
 	public var curSecTime:Float = 0.0;
 	public var curBeat:Int;
+	var tickTock:Bool = false;
 
 	var notespeed:Float;
 
@@ -67,6 +68,7 @@ class Conductor
 		songInfo = cast Json.parse(rawJson);
 		secLength = songInfo.sections.length;
 		curSecTime = (songInfo.sync / 1000) - (670 / notespeed);
+		//trace(curSecTime);
 		
 		var read:String = "";
 		var readIndex:Int = 0;
@@ -90,6 +92,9 @@ class Conductor
 
 	public function playSong()
 	{
+		//trace(curSecTime);
+		//trace(curTime);
+
 		if (FlxG.sound.music == null)
 		{
 			FlxG.sound.playMusic(Paths.music(songname.toLowerCase() + "/song"), 1, false);
@@ -107,7 +112,7 @@ class Conductor
 	public function readSection()
 	{
 		var read:String = "";
-		curTime = curTime - curSecTime;
+
 		while (true)
 		{
 			read = songInfo.sections[secIndex++];
@@ -115,7 +120,6 @@ class Conductor
 			if (read.charAt(0) == "-")
 			{
 				curBeat = Std.parseInt(read.substr(1));
-				curSecTime = (60 / songInfo.bpm) * (4 / curBeat);
 			}
 			else
 			{
@@ -124,6 +128,8 @@ class Conductor
 		}
 		if (secIndex >= secLength)
 			isStart = 2;
+
+		curSecTime += ((60 / songInfo.bpm) * (4 / curBeat));
 		return read;
 	}
 }
