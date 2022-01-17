@@ -39,7 +39,8 @@ class Conductor
 	public var curTime:Float = 0.0;
 	public var curSecTime:Float = 0.0;
 	public var curBeat:Int;
-	public var minusSecTime:Float;
+
+	public var minusSecTime:Float = 1.0;
 
 	var tickTock:Bool = false;
 
@@ -70,8 +71,9 @@ class Conductor
 		songInfo = cast Json.parse(rawJson);
 		secLength = songInfo.sections.length;
 		curSecTime = (songInfo.sync / 1000) - (670 / notespeed);
-		if (curSecTime < 0.0)
-			minusSecTime = curSecTime;
+
+		if(curSecTime < 0.0) minusSecTime = curSecTime;
+
 		// trace(curSecTime);
 
 		var read:String = "";
@@ -96,43 +98,17 @@ class Conductor
 
 	public function playSong()
 	{
-		// trace(curSecTime);
-		// trace(curTime);
-
-
 		if (FlxG.sound.music == null && curSecTime >= 0.0)
 		{
-			if (FlxG.sound.music == null)
-			{
-				FlxG.sound.playMusic(Paths.music(songname.toLowerCase() + "/song"), 1, false);
-			}
-
-			if (curSecTime <= curTime)
-			{
-				curTime = 0.0;
-				curSecTime = 0.0;
-
-				isStart = 1;
-			}
+			FlxG.sound.playMusic(Paths.music(songname.toLowerCase() + "/song"), 1, false);
 		}
 
-		else if (curSecTime <= curTime)
+		if (curSecTime <= curTime)
 		{
 			curTime = 0.0;
 			curSecTime = 0.0;
 
 			isStart = 1;
-		}
-	}
-
-	public function playMinusSong()
-	{
-		// trace(curSecTime);
-		// trace(curTime);
-
-		if (FlxG.sound.music == null)
-		{
-			FlxG.sound.playMusic(Paths.music(songname.toLowerCase() + "/song"), 1, false);
 		}
 	}
 
@@ -158,5 +134,13 @@ class Conductor
 
 		curSecTime += ((60 / songInfo.bpm) * (4 / curBeat));
 		return read;
+	}
+
+	public function playMinusSong()
+	{
+		if (FlxG.sound.music == null)
+		{
+			FlxG.sound.playMusic(Paths.music(songname.toLowerCase() + "/song"), 1, false);
+		}
 	}
 }
