@@ -63,6 +63,8 @@ class PlayState extends FlxState
 	var scoreText:FlxText;
 	var comboText:FlxText;
 
+	var upperHud:FlxSprite;
+	var songInfoText:FlxText;
 	var songProgressBar:FlxBar;
 
 	var keyInput:Array<Bool>;
@@ -158,7 +160,16 @@ class PlayState extends FlxState
 		add(scoreText);
 		add(comboText);
 
-		songProgressBar = new FlxBar(140, 5, LEFT_TO_RIGHT, 1000, 5);
+		upperHud = new FlxSprite(140, 0).loadGraphic('assets/images/upper_hud.png', false, 1000, 80);
+		add(upperHud);
+
+		songInfoText = new FlxText(229, 15, 822, "", 20);
+		//songInfoText.centerOffsets(true);
+		songInfoText.alignment="center";
+		songInfoText.text = conductor.songInfo.title + " / " + conductor.songInfo.artist;
+		add(songInfoText);
+
+		songProgressBar = new FlxBar(229, 69, LEFT_TO_RIGHT, 822, 5);
 		songProgressBar.createFilledBar(0xff1a33ff, 0xff74dfff, false, FlxColor.TRANSPARENT);
 		songProgressBar.value = 0;
 		add(songProgressBar);
