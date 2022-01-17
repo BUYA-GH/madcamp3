@@ -185,13 +185,13 @@ class PlayState extends FlxState
 	{
 		super.update(elapsed);		
 
-		if (!conductor.isStart)
+		if (conductor.isStart == 0)
 		{
-			//trace("am I Start?");
+			trace("am I Start?");
 			conductor.playSong();
 		}
 		
-		if( conductor.isStart)
+		if( conductor.isStart == 1)
 		{
 			if (conductor.curSecTime <= conductor.curTime)
 			{

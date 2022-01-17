@@ -4,8 +4,7 @@
     "difficulty": "Hard",
     "level": 12,
     "bpm": 209,
-    "sync": 1,
-    "progress": 37,
+    "sync": 2500,
     "sections": [
         "-4",
         "000000000000",
