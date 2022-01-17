@@ -124,7 +124,7 @@ class PlayState extends FlxState
 			var yJudgePoint:Int = Std.int(hitBoxPos + (hitBoxSize / 2) - (120 / 2));
 			// var judgeAnim = new FlxSprite(xJudgePoint, yJudgePoint).loadGraphic("assets/images/judge.png", true, 0, 120);
 			// judgeAnim.animation.add("crit", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], 24, false);
-			var judgeAnim = new FlxSprite(xJudgePoint, 0).loadGraphic("assets/images/line.png", true, 85, 660);
+			var judgeAnim = new FlxSprite(xJudgePoint, 0).loadGraphic("assets/images/yellow_line.png", true, 85, 660);
 			judgeAnim.animation.add("crit", [0, 1, 2, 3, 4, 5, 6, 7, 8, 14], 60, false);
 			// judgeAnim.animation.add("near", [7, 8, 9, 10, 11, 12, 13], 30, false);
 			judgeGroup.add(judgeAnim);
@@ -161,12 +161,10 @@ class PlayState extends FlxState
 				for (i in 0...12)
 				{
 					if (notes.charAt(0) == "E")
-
 						Timer.delay(function()
 						{
 							gotoScoreState();
 						}, 3000);
-
 					else if (notes.charAt(i) != "0")
 					{
 						noteGroup.add(new Note(startNotePos + (85 * i), 0, i, Std.parseInt(notes.charAt(i)), speed));
