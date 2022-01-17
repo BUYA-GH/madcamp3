@@ -139,11 +139,9 @@ class PlayState extends FlxState
 		{
 			var xJudgePoint:Int = Std.int(startNotePos + i * noteWidth + (noteWidth / 2) - (120 / 2));
 			var yJudgePoint:Int = Std.int(hitBoxPos + (hitBoxSize / 2) - (120 / 2));
-			// var judgeAnim = new FlxSprite(xJudgePoint, yJudgePoint).loadGraphic("assets/images/judge.png", true, 0, 120);
-			// judgeAnim.animation.add("crit", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], 24, false);
-			var judgeAnim = new FlxSprite(xJudgePoint, 0).loadGraphic("assets/images/judge.png", true, 85, 660);
-			judgeAnim.animation.add("crit", [0, 1, 2, 3, 4, 5, 6, 7, 8, 14], 60, false);
-			// judgeAnim.animation.add("near", [7, 8, 9, 10, 11, 12, 13], 30, false);
+
+			var judgeAnim = new FlxSprite(xJudgePoint, yJudgePoint).loadGraphic("assets/images/judge.png", true, 120, 120);
+			judgeAnim.animation.add("crit", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], 24, false);
 			judgeGroup.add(judgeAnim);
 		}
 		conductor = new Conductor(songname, difficulty, speed);
@@ -183,13 +181,14 @@ class PlayState extends FlxState
 	{
 		super.update(elapsed);
 
-		if (!conductor.isStart)
+		if (conductor.isStart == 0)
 		{
 			// trace("am I Start?");
 			conductor.playSong();
 		}
 
-		if (conductor.isStart)
+		if( conductor.isStart == 1)
+
 		{
 			if (conductor.curSecTime <= conductor.curTime)
 			{

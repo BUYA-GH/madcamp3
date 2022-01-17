@@ -33,7 +33,7 @@ class Conductor
 
 	public var noteNum:Int = 0;
 
-	public var isStart:Bool = false;
+	public var isStart:Int = 0;
 	public var canMakeNote:Bool = false;
 
 	public var curTime:Float = 0.0;
@@ -90,15 +90,17 @@ class Conductor
 
 	public function playSong()
 	{
-		if (curSecTime <= curTime && FlxG.sound.music == null)
+		if (FlxG.sound.music == null)
 		{
-			//trace(songname.toLowerCase());
-			//trace(Paths.music(songname.toLowerCase() + "/song"));
-			//FlxG.sound.playMusic("assets/music/" + songname.toLowerCase() + "/song.mp3", 0);
+			FlxG.sound.playMusic(Paths.music(songname.toLowerCase() + "/song"), 1, false);
+		}
+		
+		if (curSecTime <= curTime )
+		{
 			curTime = 0.0;
 			curSecTime = 0.0;
-			FlxG.sound.playMusic(Paths.music(songname.toLowerCase() + "/song"), 1, false);
-			isStart = true;
+			
+			isStart = 1;
 		}
 	}
 
@@ -121,7 +123,7 @@ class Conductor
 			}
 		}
 		if (secIndex >= secLength)
-			isStart = false;
+			isStart = 2;
 		return read;
 	}
 }
