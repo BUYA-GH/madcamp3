@@ -99,10 +99,23 @@ class Conductor
 		// trace(curSecTime);
 		// trace(curTime);
 
+
 		if (FlxG.sound.music == null && curSecTime >= 0.0)
 		{
-			FlxG.sound.playMusic(Paths.music(songname.toLowerCase() + "/song"), 1, false);
+			if (FlxG.sound.music == null)
+			{
+				FlxG.sound.playMusic(Paths.music(songname.toLowerCase() + "/song"), 1, false);
+			}
+
+			if (curSecTime <= curTime)
+			{
+				curTime = 0.0;
+				curSecTime = 0.0;
+
+				isStart = 1;
+			}
 		}
+
 		else if (curSecTime <= curTime)
 		{
 			curTime = 0.0;
