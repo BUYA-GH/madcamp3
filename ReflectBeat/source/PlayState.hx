@@ -417,10 +417,11 @@ class PlayState extends FlxState
 					judgeGroup.members[i].animation.stop();
 					judgeGroup.members[i].animation.play("near");
           
-         	updateScore("Fast");
+         			updateScore("Fast");
 					note.kill();
 					noteGroup.remove(note);
-         	break;
+         			break;
+				}
 			}
 		}
 	}
