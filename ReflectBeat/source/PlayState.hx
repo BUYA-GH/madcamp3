@@ -173,7 +173,11 @@ class PlayState extends FlxState
 		maxComboText.setFormat(Paths.font("DREAMS.ttf"), 3, FlxColor.WHITE, RIGHT);
 		add(maxComboText);
 
-		comboText = new FlxText(1110, 360, 0, "0", 15);
+		//comboText = new FlxText(1110, 360, 0, "0", 15);
+		
+		comboText = new FlxText(startNotePos, FlxG.height/2, noteWidth*12, "0", 50);
+		comboText.alpha = 0.2;
+		comboText.setFormat(Paths.font("DREAMS.ttf"), 50, FlxColor.WHITE, CENTER);
 		add(comboText);
 
 		tickSound = FlxG.sound.load('assets/sounds/tick.wav', 1, false);
@@ -195,6 +199,9 @@ class PlayState extends FlxState
 
 		if( conductor.isStart == 1)
 		{
+			if(conductor.minusSecTime + conductor.curTime >= 0.0)
+				conductor.playMinusSong();
+			
 			if (conductor.curSecTime <= conductor.curTime)
 			{				
 				var notes = conductor.readSection();
