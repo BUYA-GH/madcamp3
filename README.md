@@ -1,4 +1,4 @@
-# CS496 Immersive Camp (Winter 2021)
+# CS496 Immersion Camp (Winter 2021)
 
 # Project #3: Rhythm Game
 
