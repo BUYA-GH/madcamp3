@@ -21,18 +21,18 @@ WE DO NOT RECOMMEND YOU PLAYING THIS GAME.
 ### Installing the Required Programs
 
  HaxeFlixel 기반으로 만들어진 게임이어서 [Haxe](https://haxe.org/)와 [HaxeFlixel](https://haxeflixel.com/documentation/install-haxeflixel/)을 설치해야 한다. 추가적으로 게임 구동에 필요한 아래의 라이브러리들을 설치해야 한다.
-
+```
 flixel
 flixel-addons
 flixel-ui
 hscript
 newgrounds
-
-CMD에 `haxelib install [library]` 형식으로 입력하면 설치할 수 있다. 예를 들면, `haxelib install newgrounds`를 입력하면 마지막 라이브러리가 설치된다.
+```
+CMD에 `haxelib install [library]` 형식으로 입력하면 설치할 수 있다. 예를 들어, `haxelib install newgrounds`를 입력하면 마지막 라이브러리가 설치된다.
 
 ### Copyright Issues
 
- 저작권 문제로 인해 작업에 사용된 곡들은 파일에 포함되어 있지 않다. 아래에 JSON을 이용한 채보 작성에 대해 설명하니 참고하고 직접 채보를 짜는 것을 권장한다.
+ 저작권 문제로 인해 작업에 사용된 곡들은 파일에 포함되어 있지 않다. 아래에 JSON을 이용한 채보 작성에 대해 설명하니 참고하 직접 채보를 짜는 것을 권장한다.
 
 ### Compiling Game
 
@@ -62,7 +62,7 @@ Title, Select, Loading, Play, Score의 5가지 State로 구성되어 있다.
 
 ### Score State
 
- 플레이 결과를 확인하는 창이다. 최종 점수, Critical / Fast / Late / Miss 개수, Max Combo를 보여준다.
+ 플레이 결과를 확인하는 창이다. 최종 점수, Critical / Fast / Late / Miss 개수를 보여준다.
 
 ## Mechanism
 
@@ -70,11 +70,11 @@ Title, Select, Loading, Play, Score의 5가지 State로 구성되어 있다.
 
 ### Initial Sync
 
-  `Conductor` 클래스에서 JSON 파일에 적힌 `sync` 값을 읽고 그에 맞춰 노트 / 곡을 출력한다.  `PlayState.hx` 내부의  `update` 함수에서 싱크가 맞을 때까지 시간을 업데이트 하다가 싱크가 맞으면 출력을 시작하는 방식으로 되어있다. `update` 함수는 Frame 단위로 실행되므로 매 프레임마다 곡이 시작할지를 판별하게 된다.
+  `Conductor` 클래스에서 JSON 파일에 적힌 `sync` 값을 읽고 그에 맞춰 노트 / 곡을 출력한다.  `PlayState.hx` 내부의  `update` 함수에서 싱크가 맞을 때까지 시간을 업데이트 하다가 싱크가 맞으면 출력을 시작하는 방식으로 되어있다. `update` 함수는 Frame 단위로 실행되므로 매 프레임마다 곡이 시작할지 판별하게 된다.
 
 ### Note Print
 
- 매 프레임마다 JSON 파일을 1줄씩 읽어서 노트를 출력한다. JSON 파일에는 음표의 길이와 BPM이 기록되어 있어 각 노트가 나올 시간을 계산 가능하다.  `PlayState.hx` 내부의  `update` 함수에서 업데이트 중인 플레이 시간이 노트가 나와야 될 시간보다 커지는 순간 노트를 출력하게 된다. 약간의 딜레이가 생기게 되지만 오차가 최대 1/60초까지만 발생해 판정에 큰 영향을 주지 않는다.
+ 매 프레임마다 JSON 파일을 1줄씩 읽어서 노트를 출력한다. JSON 파일에 음표의 길이와 BPM이 기록되어 있어 각 노트가 나올 시간을 계산 가능하다.  `PlayState.hx` 내부의  `update` 함수에서 업데이트 중인 플레이 시간이 노트가 나와야 될 시간보다 커지는 순간 노트를 출력하게 된다. 출력에 약간의 딜레이가 생기게 되지만 오차가 최대 1/60초까지만 발생해 판정에 큰 영향을 주지 않는다.
 ```
 if (conductor.curSecTime <= conductor.curTime)
 	{
