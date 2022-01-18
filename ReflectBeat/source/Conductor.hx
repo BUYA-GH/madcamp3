@@ -74,27 +74,7 @@ class Conductor
 
 		if (curSecTime < 0.0)
 			minusSecTime = curSecTime;
-
-		// trace(curSecTime);
-	/*
-		var read:String = "";
-		var readIndex:Int = 0;
-		while (true)
-		{
-			read = songInfo.sections[readIndex++];
-			if (read.charAt(0) == "-")
-				continue;
-			else if (read == "E")
-				break;
-
-			for (i in 0...12)
-			{
-				if (read.charAt(i) != "0")
-				{
-					noteNum++;
-				}
-			}
-
+		
 		noteNum = songInfo.combo;
 	}
 
@@ -131,6 +111,7 @@ class Conductor
 				break;
 			}
 		}
+		if(secIndex >= secLength) isStart = 2;
 
 		curSecTime += ((60 / songInfo.bpm) * (4 / curBeat));
 		return read;

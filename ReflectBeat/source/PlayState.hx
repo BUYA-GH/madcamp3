@@ -205,13 +205,11 @@ class PlayState extends FlxState
 		{
 			if (conductor.minusSecTime + conductor.curTime >= 0.0)
 			{
-				//trace(conductor.curTime);
 				conductor.playMinusSong();
 			}
 				
 			if (conductor.curSecTime <= conductor.curTime)
 			{
-				//trace(conductor.curTime);
 				var notes = conductor.readSection();
 				songProgressBar.value = (conductor.secIndex / conductor.secLength) * 100;
 
