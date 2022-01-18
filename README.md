@@ -172,6 +172,10 @@ FlxG.overlap(underLine, noteGroup, missDestroy);
 ### Freeze & Shutdown
 
  종종 곡의 중간에 게임이 멈춰버리는 버그가 존재한다. 정지 위치가 일관적이지 않은 것으로 보아 컴퓨터 처리 능력에 과한 부담이 걸려 생기는 문제로 추정된다.
+ 
+### Late / Miss Judge
+
+ Hitbox를 노트 속도에 따라 늘리는 방식을 사용했더니 속도가 빠르면 Late와 Miss 판정의 범위가 게임의 최하단 픽셀을 넘어가 인식되지 않는 문제가 발생했다. 판정을 Hitbox 개념이 아니라 노트의 y좌표 값에 따라 일일이 계산하는 방식으로 바꿔서 짜야 될 것으로 보인다.
 
 ---
 
