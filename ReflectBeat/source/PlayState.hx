@@ -173,9 +173,9 @@ class PlayState extends FlxState
 		maxComboText.setFormat(Paths.font("DREAMS.ttf"), 3, FlxColor.WHITE, RIGHT);
 		add(maxComboText);
 
-		//comboText = new FlxText(1110, 360, 0, "0", 15);
-		
-		comboText = new FlxText(startNotePos, FlxG.height/2, noteWidth*12, "0", 50);
+		// comboText = new FlxText(1110, 360, 0, "0", 15);
+
+		comboText = new FlxText(startNotePos, FlxG.height / 2, noteWidth * 12, "0", 50);
 		comboText.alpha = 0.2;
 		comboText.setFormat(Paths.font("DREAMS.ttf"), 50, FlxColor.WHITE, CENTER);
 		add(comboText);
@@ -191,7 +191,6 @@ class PlayState extends FlxState
 	{
 		super.update(elapsed);
 
-
 		if (conductor.isStart == 0)
 		{
 			conductor.playSong();
@@ -199,10 +198,9 @@ class PlayState extends FlxState
 
 		if (conductor.isStart == 1)
 		{
-
 			if (conductor.minusSecTime + conductor.curTime >= 0.0)
 				conductor.playMinusSong();
-      
+
 			if (conductor.curSecTime <= conductor.curTime)
 			{
 				var notes = conductor.readSection();
@@ -416,11 +414,12 @@ class PlayState extends FlxState
 
 					judgeGroup.members[i].animation.stop();
 					judgeGroup.members[i].animation.play("near");
-          
-         	updateScore("Fast");
+
+					updateScore("Fast");
 					note.kill();
 					noteGroup.remove(note);
-         	break;
+					break;
+				}
 			}
 		}
 	}
@@ -587,7 +586,7 @@ class PlayState extends FlxState
 
 	function updateMaxCombo()
 	{
-		if(maxCombo < combo)
+		if (maxCombo < combo)
 		{
 			maxCombo = combo;
 			maxComboText.text = Std.string(maxCombo);
