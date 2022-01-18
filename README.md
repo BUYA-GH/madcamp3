@@ -58,7 +58,7 @@ Title, Select, Loading, Play, Score의 5가지 State로 구성되어 있다.
 
 ### Play State
 
- 일반 노트와 롱 노트가 있다. 일반 노트는 최초 1회 입력만을 판정하고 롱 노트는 최초 입력 후 8분음표 단위로 키가 입력되어 있는지를 확인한다. 일반 노트와 롱 노트의 최초 입력은 Critical, Fast, Late 3가지 판정이 있고 롱 노트의 2번째 이후 판정은 Critical 판정만 존재한다. Fast와 Late는 Combo를 끊지는 않지만 Critical 점수의 절반만 얻는다.
+ 일반 노트와 롱 노트가 있다. 일반 노트는 최초 1회 입력만을 판정하고 롱 노트는 최초 입력 후 8분음표 단위로 키가 입력되어 있는지를 확인한다. 일반 노트와 롱 노트의 최초 입력은 Critical, Fast, Late 3가지 판정이 있고 롱 노트의 2번째 이후 판정은 Critical 판정만 존재한다. Fast와 Late는 Combo를 끊지는 않지만 Critical 점수의 절반만 얻는다. 판정 범위는 Critical이 40ms(24 frame), Fast와 Late가 Critical 전후로 20ms(12 frame)이다.
 
 ### Score State
 
@@ -74,8 +74,50 @@ Title, Select, Loading, Play, Score의 5가지 State로 구성되어 있다.
 
 ### Note Print
 
+ 매 프레임마다 JSON 파일을 1줄씩 읽어서 노트를 출력한다. JSON 파일에는 음표의 길이와 BPM이 기록되어 있어 각 노트가 나올 시간을 계산 가능하다.  `PlayState.hx` 내부의  `update` 함수에서 업데이트 중인 플레이 시간이 노트가 나와야 될 시간보다 커지는 순간 노트를 출력하게 된다. 약간의 딜레이가 생기게 되지만 오차가 최대 1/60초까지만 발생해 판정에 큰 영향을 주지 않는다.
+```
+if (conductor.curSecTime <= conductor.curTime)
+	{
+		var notes = conductor.readSection();
+		songProgressBar.value = (conductor.secIndex / conductor.secLength) * 100;
+
+  if (notes.charAt(0) == "E")
+			{
+		 	songProgressBar.value = 100;
+			 Timer.delay(function()
+				{
+					gotoScoreState();
+				}, 3000);
+			}
+   ...
+```
+
 ### Judge System
 
+ Hitbox 개념을 사용했다. 설정한 노트 속도에 맞는 크기의 보이지 않는 박스를 판정선 주변에 생성하고 매 프레임마다 충돌 판정을 확인한다. 충돌이 발생한 상태에서 노트의 위치에 맞는 키를 누르면 충돌한 판정 박스에 따라 점수를 계산하고 노트를 소멸시킨다.
+ ```
+criticalBoxSize = Std.int(speed / 24);
+fastBoxSize = lateBoxSize = Std.int(criticalBoxSize / 2);
+
+criticalBoxPos = Std.int(hitBoxPos - 3 * (criticalBoxSize / 4));
+criticalBox = new FlxSprite(startNotePos, criticalBoxPos).makeGraphic(backgroundWidth, criticalBoxSize, FlxColor.TRANSPARENT);
+add(criticalBox);
+
+fastBoxPos = Std.int(criticalBoxPos - fastBoxSize);
+fastBox = new FlxUISprite(startNotePos, fastBoxPos).makeGraphic(backgroundWidth, fastBoxSize, FlxColor.TRANSPARENT);
+add(fastBox);
+
+lateBoxPos = Std.int(criticalBoxPos + criticalBoxSize);
+lateBox = new FlxUISprite(startNotePos, lateBoxPos).makeGraphic(backgroundWidth, lateBoxSize, FlxColor.TRANSPARENT);
+add(lateBox);
+```
+```
+FlxG.overlap(fastBox, noteGroup, checkFast);
+FlxG.overlap(criticalBox, noteGroup, checkCritical);
+FlxG.overlap(hitBox, noteGroup, destroyLong);
+FlxG.overlap(lateBox, noteGroup, checkLate);
+FlxG.overlap(underLine, noteGroup, missDestroy);
+```
 ## Add Your Own Song
 
 ### Add in Songlist
@@ -91,27 +133,27 @@ Title, Select, Loading, Play, Score의 5가지 State로 구성되어 있다.
  JSON 파일을 사용한다. 먼저  `assets/data/<songName>` 폴더에  `<difficulty>.json` 파일을 만들고 곡 제목, 작곡가, 난이도 등의 정보를 기록한다. 
 ```
 {
-"title": "Absolute Zero Point",
-"artist": "Kaneko Chiharu",
-"difficulty": "Hard",
-"level": 12,
-"bpm": 209,
-"sync": 2300,
+ "title": "Absolute Zero Point",
+ "artist": "Kaneko Chiharu",
+ "difficulty": "Hard",
+ "level": 12,
+ "bpm": 209,
+ "sync": 2300,
 ```
  `sync`는 채보와 곡이 같은 타이밍에 나오도록 맞추기 위해 지정해주는 값이다. 노트가 떨어지는데 걸리는 시간이 코드에 반영되어 있기 때문에 대부분의 경우 양수 값이 들어가게 된다.
 ```
-"sections": [
-"-4",
-"000000^00000",
-"000000^00000",
-"-8",
-"300000000000",
-"000000300000",
-"600000000000",
-"000000600000",
-...
-"E"
-]
+ "sections": [
+  "-4",
+  "000000^00000",
+  "000000^00000",
+  "-8",
+  "300000000000",
+  "000000300000",
+  "600000000000",
+  "000000600000",
+  ...
+  "E"
+ ]
 }
 ```
 
