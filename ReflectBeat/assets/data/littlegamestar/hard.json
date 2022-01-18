@@ -2,9 +2,9 @@
     "title":"LittleGameStar",
     "artist":"An",
     "difficulty":"Hard",
-    "level":8,
+    "level":9,
     "bpm":215,
-    "sync":625,
+    "sync":600,
     "combo":822,
     "sections":[
         "-1",

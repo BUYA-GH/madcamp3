@@ -119,7 +119,7 @@ class PlayState extends FlxState
 		upperMissBox = new FlxUISprite(startNotePos, upperMissBoxPos).makeGraphic(backgroundWidth, upperMissBoxSize, FlxColor.TRANSPARENT);
 		add(upperMissBox);
 
-		hitBox = new FlxSprite(40, hitBoxPos - (hitBoxSize / 2));
+		hitBox = new FlxSprite(20, hitBoxPos - (hitBoxSize / 2));
 		hitBox.loadGraphic("assets/images/JudgeLaser.png", true, 1200, hitBoxSize);
 		hitBox.animation.add("judge", [0, 1, 2, 3], 4, true);
 		hitBox.animation.play("judge");
@@ -127,7 +127,8 @@ class PlayState extends FlxState
 
 		if (!isAuto)
 		{
-			underLine = new FlxSprite(startNotePos, lateBoxPos + 21).makeGraphic(backgroundWidth, underLineSize, FlxColor.BLACK);
+			var underLinePos:Int = lateBoxPos + 20;
+			underLine = new FlxSprite(startNotePos, underLinePos).makeGraphic(backgroundWidth, underLineSize, FlxColor.BLACK);
 		}
 		else
 		{
@@ -604,11 +605,11 @@ class PlayState extends FlxState
 
 	function updateScore(result:String)
 	{
-		// debugText.text = result;
-		if (noteNum == criticalNum)
-			score = 10000000;
 		scoreText.text = Std.string(Std.int(score));
 		comboText.text = Std.string(combo);
+
+		if (noteNum == criticalNum)
+			score = 10000000;
 	}
 
 	function gotoScoreState()
