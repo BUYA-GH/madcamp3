@@ -43,7 +43,6 @@ class ScoreState extends FlxState
 
 	override public function create()
 	{
-
 		FlxG.sound.pause();
 		FlxG.sound.music = null;
 
@@ -100,6 +99,7 @@ class ScoreState extends FlxState
 				if (frameCount == 60)
 				{
 					scoreDisplayed = true;
+					scoreText.text = Std.string(score);
 				}
 			}
 		}
