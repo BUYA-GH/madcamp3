@@ -5,6 +5,7 @@ import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
+import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 
 // import js.html.AnimationPlaybackEvent;
@@ -30,22 +31,25 @@ class LoadingState extends FlxState
 		var bg:FlxSprite = new FlxSprite(0, 0).loadGraphic(Paths.image('loading_state'));
 		add(bg);
 
-		var songName:FlxText = new FlxText(300, 180, songInfo.songname);
+		var songName:FlxText = new FlxText(300, 220, songInfo.songname);
 		songName.setFormat(Paths.font("DREAMS.ttf"), 10, FlxColor.WHITE);
+		songName.screenCenter(FlxAxes.X);
 		add(songName);
 
-		var composer:FlxText = new FlxText(300, 230, songInfo.composer);
+		var composer:FlxText = new FlxText(300, 270, songInfo.composer);
 		composer.setFormat(Paths.font("DREAMS.ttf"), 10, FlxColor.WHITE);
+		composer.screenCenter(FlxAxes.X);
 		add(composer);
 
-		var bpm:FlxText = new FlxText(300, 280, Std.string(songInfo.bpm));
+		var bpm:FlxText = new FlxText(300, 320, Std.string(songInfo.bpm));
 		bpm.setFormat(Paths.font("DREAMS.ttf"), 10, FlxColor.WHITE);
+		bpm.screenCenter(FlxAxes.X);
 		add(bpm);
 
-		speedText = new FlxText(300, 350, Std.string(speed));
+		speedText = new FlxText(300, 390, Std.string(speed));
 		speedText.setFormat(Paths.font("DREAMS.ttf"), 10, FlxColor.WHITE);
+		speedText.screenCenter(FlxAxes.X);
 		add(speedText);
-
 
 		super.create();
 	}
@@ -59,25 +63,27 @@ class LoadingState extends FlxState
 			FlxG.switchState(new PlayState(songInfo.songname, difficulty, speed, isAuto));
 		}
 
-		if(!pressedUpandDown)
+		if (!pressedUpandDown)
 		{
 			loadingTime += elapsed;
 		}
 		else
 		{
-			if (FlxG.keys.justPressed.DOWN) 
+			if (FlxG.keys.justPressed.DOWN)
 			{
 				speed = speed - 100;
-				if(speed < 500) speed = 500;
+				if (speed < 500)
+					speed = 500;
 			}
 			else if (FlxG.keys.justPressed.UP)
 			{
 				speed = speed + 100;
-				if(speed > 1500) speed = 1500;
+				if (speed > 1500)
+					speed = 1500;
 			}
 			speedText.text = Std.string(speed);
 		}
-		
+
 		super.update(elapsed);
 	}
 }

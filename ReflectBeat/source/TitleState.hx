@@ -13,6 +13,7 @@ class TitleState extends FlxState
 	var playButton:FlxButton;
 	var fullscreenButton:FlxButton;
 	var titleText:FlxText;
+	var enterText:FlxText;
 
 	override public function create()
 	{
@@ -23,6 +24,11 @@ class TitleState extends FlxState
 		titleText.setFormat(Paths.font("DREAMS.ttf"), 25, FlxColor.WHITE);
 		titleText.screenCenter(FlxAxes.X);
 		add(titleText);
+
+		enterText = new FlxText(0, 560, "Press Enter to Start");
+		enterText.setFormat(32, FlxColor.WHITE);
+		enterText.screenCenter(FlxAxes.X);
+		add(enterText);
 
 		super.create();
 	}
