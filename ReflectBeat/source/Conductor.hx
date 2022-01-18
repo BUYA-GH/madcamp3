@@ -14,7 +14,7 @@ typedef SongData =
 	var level:Int;
 	var bpm:Float;
 	var sync:Float;
-
+	var combo:Int;
 	var sections:Array<String>;
 }
 
@@ -76,7 +76,7 @@ class Conductor
 			minusSecTime = curSecTime;
 
 		// trace(curSecTime);
-
+	/*
 		var read:String = "";
 		var readIndex:Int = 0;
 		while (true)
@@ -94,9 +94,8 @@ class Conductor
 					noteNum++;
 				}
 			}
-		}
 
-		// bow 794
+		noteNum = songInfo.combo;
 	}
 
 	public function playSong()

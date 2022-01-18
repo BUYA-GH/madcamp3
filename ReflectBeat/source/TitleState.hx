@@ -23,6 +23,7 @@ class TitleState extends FlxState
 		titleText = new FlxText(0, 330, "Title");
 		titleText.setFormat(Paths.font("DREAMS.ttf"), 25, FlxColor.WHITE);
 		titleText.screenCenter(FlxAxes.X);
+
 		add(titleText);
 
 		enterText = new FlxText(0, 560, "Press Enter to Start");
