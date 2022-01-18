@@ -13,19 +13,23 @@ class TitleState extends FlxState
 	var playButton:FlxButton;
 	var fullscreenButton:FlxButton;
 	var titleText:FlxText;
+	var enterText:FlxText;
 
 	override public function create()
 	{
 		var bg:FlxSprite = new FlxSprite(0, 0).loadGraphic(Paths.image('title_state'));
 		add(bg);
 
-		titleText = new FlxText(0, 180, 0, "Title");
-		titleText.setFormat(Paths.font("DREAMS.ttf"), 32, FlxColor.WHITE);
+		titleText = new FlxText(0, 330, "Title");
+		titleText.setFormat(Paths.font("DREAMS.ttf"), 25, FlxColor.WHITE);
+		titleText.screenCenter(FlxAxes.X);
+
 		add(titleText);
 
-		fullscreenButton = new FlxButton(0, 200, FlxG.fullscreen ? "FULLSCREEN" : "WINDOWED", clickFullscreen);
-		fullscreenButton.screenCenter(FlxAxes.X);
-		add(fullscreenButton);
+		enterText = new FlxText(0, 560, "Press Enter to Start");
+		enterText.setFormat(32, FlxColor.WHITE);
+		enterText.screenCenter(FlxAxes.X);
+		add(enterText);
 
 		super.create();
 	}

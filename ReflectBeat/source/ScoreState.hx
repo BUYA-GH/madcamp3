@@ -157,6 +157,7 @@ class ScoreState extends FlxState
 				{
 					scoreText.text = Std.string(score);
 					scoreDisplayed = true;
+					scoreText.text = Std.string(score);
 				}
 			}
 		}

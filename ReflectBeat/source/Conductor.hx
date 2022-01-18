@@ -72,7 +72,8 @@ class Conductor
 		secLength = songInfo.sections.length;
 		curSecTime = (songInfo.sync / 1000) - (670 / notespeed);
 
-		if(curSecTime < 0.0) minusSecTime = curSecTime;
+		if (curSecTime < 0.0)
+			minusSecTime = curSecTime;
 
 		// trace(curSecTime);
 	/*
@@ -93,7 +94,7 @@ class Conductor
 					noteNum++;
 				}
 			}
-		}*/
+
 		noteNum = songInfo.combo;
 	}
 
@@ -130,8 +131,6 @@ class Conductor
 				break;
 			}
 		}
-		if (secIndex >= secLength)
-			isStart = 2;
 
 		curSecTime += ((60 / songInfo.bpm) * (4 / curBeat));
 		return read;

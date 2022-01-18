@@ -40,71 +40,35 @@ class SelectState extends FlxState
 	{
 		songs = CoolUtil.initSonglist(Paths.txt('songlist'));
 
-		// TODO
-		// Change BackGround Image
 		var bg:FlxSprite = new FlxSprite(0, 0).loadGraphic(Paths.image('select_state'));
 		add(bg);
 
 		songNameList = new FlxTypedGroup<FlxText>();
 		songInfoList = new FlxTypedGroup<FlxText>();
 		add(songNameList);
-		// add(songInfoList);
-
-		// for check - erase this later
-		var playButton:FlxButton = new FlxButton(0, 0, songs[songs.length - 1].songname, clickPlay);
-		playButton.screenCenter();
-		add(playButton);
 
 		for (i in 0...songs.length)
 		{
-			var songName:FlxText = new FlxText(0, 100 * i, 0, songs[i].songname);
+
+			var songName:FlxText = new FlxText(100, 0, songs[i].songname, 20);
 			songNameList.add(songName);
-			var songInfo:FlxText = new FlxText(songName.x, songName.y + 60, 0, songs[i].composer + " " + Std.string(songs[i].bpm), 20);
-			songInfoList.add(songInfo);
 		}
 
-		// scoreText = new FlxText(FlxG.width * 0.7, "", 32);
-		// scoreText.autoSize = false;
-		// scoreText.setFormat(Paths.font("DREAMS.ttf"), 32, FlxColor.WHITE, RIGHT);
-		// scoreText.alignment = RIGHT;
-
-		diffText = new FlxText(600, 0, 0, "", 24);
-		diffText.setFormat(Paths.font("DREAMS.ttf"), 24, FlxColor.WHITE, RIGHT);
+		diffText = new FlxText();
+		diffText.setFormat(32, FlxColor.WHITE);
+		diffText.setPosition(1100, 50);
 		add(diffText);
-
-		add(scoreText);
 
 		changeSelection();
 		changeDiff();
 
-		// FlxG.sound.playMusic(Paths.music('title'), 0);
-		// FlxG.sound.music.fadeIn(2, 0, 0.8);
-
-		// selector = new FlxText();
-		// selector.size = 40;
-		// selector.text = ">";
-		// add(selector);
-
-		// var swag:Alphabet = new Alphabet(1, 0, "swag");
 		super.create();
 	}
 
 	override public function update(elapsed:Float)
 	{
 		super.update(elapsed);
-		/*
-			if (FlxG.sound.music.volume < 0.7)
-			{
-				FlxG.sound.music.volume += 0.5 * FlxG.elapsed;
-			}
-		 */
 
-		lerpScore = Math.floor(FlxMath.lerp(lerpScore, intendedScore, 0.4));
-
-		if (Math.abs(lerpScore - intendedScore) <= 10)
-			lerpScore = intendedScore;
-
-		// scoreText.text = "PERSONAL BEST:" + lerpScore;
 		var up:Bool = FlxG.keys.justPressed.UP;
 		var down:Bool = FlxG.keys.justPressed.DOWN;
 		var left:Bool = FlxG.keys.justPressed.LEFT;
@@ -135,16 +99,9 @@ class SelectState extends FlxState
 			FlxG.switchState(new TitleState());
 		if (accepted)
 		{
-			// var poop:String = Highscore.formatSong(songs[curSelected].songName.toLowerCase(), curDifficulty);
-
-			// trace(poop);
-
-			// PlayState.SONG = Song.loadFromJson(poop, songs[curSelected].songName.toLowerCase());
-			// trace('CUR WEEK' + PlayState.storyWeek);
-			// LoadingState.loadAndSwitchState(new PlayState());
 			FlxG.switchState(new LoadingState(songs[curSelected], curDifficulty, false));
 		}
-		if(autoAccepted)
+		if (autoAccepted)
 		{
 			FlxG.switchState(new LoadingState(songs[curSelected], curDifficulty, true));
 		}
@@ -159,10 +116,6 @@ class SelectState extends FlxState
 		if (curDifficulty > 1)
 			curDifficulty = 1;
 
-		#if !switch
-		// intendedScore = Highscore.getScore(songs[curSelected].songName, curDifficulty);
-		#end
-
 		switch (curDifficulty)
 		{
 			case 0:
@@ -174,13 +127,6 @@ class SelectState extends FlxState
 
 	function changeSelection(change:Int = 0)
 	{
-		#if !switch
-		// NGio.logEvent('Fresh');
-		#end
-
-		// NGio.logEvent('Fresh');
-		// FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
-
 		curSelected += change;
 
 		if (curSelected < 0)
@@ -188,49 +134,20 @@ class SelectState extends FlxState
 		if (curSelected >= songs.length)
 			curSelected = 0;
 
-		// selector.y = (70 * curSelected) + 30;
-
-		#if !switch
-		// intendedScore = Highscore.getScore(songs[curSelected].songName, curDifficulty);
-		// lerpScore = 0;
-		#end
-
-		#if PRELOAD_ALL
-		// FlxG.sound.playMusic(Paths.inst(songs[curSelected].songName), 0);
-		#end
-
 		var index:Int = 0;
 		for (item in songNameList.members)
 		{
 			item.alpha = 0.6;
 
 			var targetY:Int = index - curSelected;
-			index++;
 
-			item.y = (70 * index) + 30 - 30 * targetY;
+			item.y = 350 + 70 * targetY;
+			item.setFormat(28);
+			index++;
 
 			if (targetY == 0)
 			{
 				item.alpha = 1;
-				// item.setGraphicSize(Std.int(item.width));
-			}
-		}
-
-		index = 0;
-
-		for (item in songInfoList.members)
-		{
-			item.alpha = 0.6;
-
-			var targetY:Int = index - curSelected;
-			index++;
-
-			item.y = (100 * index) + 100 * targetY;
-
-			if (targetY == 0)
-			{
-				item.alpha = 1;
-				// item.setGraphicSize(Std.int(item.width));
 			}
 		}
 	}
