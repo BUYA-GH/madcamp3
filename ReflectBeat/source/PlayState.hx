@@ -95,8 +95,9 @@ class PlayState extends FlxState
 	override public function create()
 	{
 		noteWidth = Std.int(backgroundWidth / 12);
+		FlxG.sound.music = null;
 
-		background = new FlxSprite(0, 0).loadGraphic(Paths.image('play_state'), backgroundWidth, backgroundHeight);
+		background = new FlxSprite(0, 0).loadGraphic(Paths.image('play_state'), false, backgroundWidth, backgroundHeight);
 		add(background);
 
 		criticalBoxSize = Std.int(speed / 24);
@@ -118,7 +119,10 @@ class PlayState extends FlxState
 		upperMissBox = new FlxUISprite(startNotePos, upperMissBoxPos).makeGraphic(backgroundWidth, upperMissBoxSize, FlxColor.TRANSPARENT);
 		add(upperMissBox);
 
-		hitBox = new FlxSprite(startNotePos, hitBoxPos - (hitBoxSize / 2)).loadGraphic("assets/images/JudgeLaser.png", backgroundWidth, hitBoxSize);
+		hitBox = new FlxSprite(40, hitBoxPos - (hitBoxSize / 2));
+		hitBox.loadGraphic("assets/images/JudgeLaser.png", true, 1200, hitBoxSize);
+		hitBox.animation.add("judge", [0, 1, 2, 3], 4, true);
+		hitBox.animation.play("judge");
 		add(hitBox);
 
 		if (!isAuto)
@@ -199,12 +203,15 @@ class PlayState extends FlxState
 
 		if (conductor.isStart == 1)
 		{
-
 			if (conductor.minusSecTime + conductor.curTime >= 0.0)
+			{
+				//trace(conductor.curTime);
 				conductor.playMinusSong();
-      
+			}
+				
 			if (conductor.curSecTime <= conductor.curTime)
 			{
+				//trace(conductor.curTime);
 				var notes = conductor.readSection();
 				songProgressBar.value = (conductor.secIndex / conductor.secLength) * 100;
 

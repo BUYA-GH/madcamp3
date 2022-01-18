@@ -19,7 +19,7 @@ class TitleState extends FlxState
 		var bg:FlxSprite = new FlxSprite(0, 0).loadGraphic(Paths.image('title_state'));
 		add(bg);
 
-		titleText = new FlxText(0, 180, "Title");
+		titleText = new FlxText(0, 180, 0, "Title");
 		titleText.setFormat(Paths.font("DREAMS.ttf"), 32, FlxColor.WHITE);
 		add(titleText);
 

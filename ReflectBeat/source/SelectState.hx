@@ -57,9 +57,9 @@ class SelectState extends FlxState
 
 		for (i in 0...songs.length)
 		{
-			var songName:FlxText = new FlxText(0, 100 * i, songs[i].songname);
+			var songName:FlxText = new FlxText(0, 100 * i, 0, songs[i].songname);
 			songNameList.add(songName);
-			var songInfo:FlxText = new FlxText(songName.x, songName.y + 60, songs[i].composer + " " + Std.string(songs[i].bpm), 20);
+			var songInfo:FlxText = new FlxText(songName.x, songName.y + 60, 0, songs[i].composer + " " + Std.string(songs[i].bpm), 20);
 			songInfoList.add(songInfo);
 		}
 
@@ -68,8 +68,8 @@ class SelectState extends FlxState
 		// scoreText.setFormat(Paths.font("DREAMS.ttf"), 32, FlxColor.WHITE, RIGHT);
 		// scoreText.alignment = RIGHT;
 
-		diffText = new FlxText(600, 0, "", 24);
-		diffText.setFormat(Paths.font("DREAMS.ttf"), FlxColor.WHITE, RIGHT);
+		diffText = new FlxText(600, 0, 0, "", 24);
+		diffText.setFormat(Paths.font("DREAMS.ttf"), 24, FlxColor.WHITE, RIGHT);
 		add(diffText);
 
 		add(scoreText);

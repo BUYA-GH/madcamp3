@@ -30,19 +30,19 @@ class LoadingState extends FlxState
 		var bg:FlxSprite = new FlxSprite(0, 0).loadGraphic(Paths.image('loading_state'));
 		add(bg);
 
-		var songName:FlxText = new FlxText(300, 180, songInfo.songname);
+		var songName:FlxText = new FlxText(300, 180, 0, songInfo.songname);
 		songName.setFormat(Paths.font("DREAMS.ttf"), 10, FlxColor.WHITE);
 		add(songName);
 
-		var composer:FlxText = new FlxText(300, 230, songInfo.composer);
+		var composer:FlxText = new FlxText(300, 230, 0, songInfo.composer);
 		composer.setFormat(Paths.font("DREAMS.ttf"), 10, FlxColor.WHITE);
 		add(composer);
 
-		var bpm:FlxText = new FlxText(300, 280, Std.string(songInfo.bpm));
+		var bpm:FlxText = new FlxText(300, 280, 0, Std.string(songInfo.bpm));
 		bpm.setFormat(Paths.font("DREAMS.ttf"), 10, FlxColor.WHITE);
 		add(bpm);
 
-		speedText = new FlxText(300, 350, Std.string(speed));
+		speedText = new FlxText(300, 350, 0, Std.string(speed));
 		speedText.setFormat(Paths.font("DREAMS.ttf"), 10, FlxColor.WHITE);
 		add(speedText);
 

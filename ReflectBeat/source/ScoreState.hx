@@ -50,27 +50,27 @@ class ScoreState extends FlxState
 		var bg:FlxSprite = new FlxSprite(0, 0).loadGraphic(Paths.image('score_state'));
 		add(bg);
 
-		scoreText = new FlxText(500, 100, "0");
+		scoreText = new FlxText(500, 100, 0, "0");
 		scoreText.setFormat(Paths.font("DREAMS.ttf"), 10, FlxColor.WHITE);
 		add(scoreText);
 
-		criticalText = new FlxText(500, 150, Std.string(critical));
+		criticalText = new FlxText(500, 150, 0, Std.string(critical));
 		criticalText.setFormat(Paths.font("DREAMS.ttf"), 10, FlxColor.WHITE);
 		add(criticalText);
 
-		fastText = new FlxText(500, 200, Std.string(fast));
+		fastText = new FlxText(500, 200, 0, Std.string(fast));
 		fastText.setFormat(Paths.font("DREAMS.ttf"), 10, FlxColor.WHITE);
 		add(fastText);
 
-		lateText = new FlxText(500, 250, Std.string(late));
+		lateText = new FlxText(500, 250, 0, Std.string(late));
 		lateText.setFormat(Paths.font("DREAMS.ttf"), 10, FlxColor.WHITE);
 		add(lateText);
 
-		missText = new FlxText(500, 300, Std.string(miss));
+		missText = new FlxText(500, 300, 0, Std.string(miss));
 		missText.setFormat(Paths.font("DREAMS.ttf"), 10, FlxColor.WHITE);
 		add(missText);
 
-		maxComboText = new FlxText(500, 350, Std.string(maxCombo));
+		maxComboText = new FlxText(500, 350, 0, Std.string(maxCombo));
 		maxComboText.setFormat(Paths.font("DREAMS.ttf"), 10, FlxColor.WHITE);
 		add(maxComboText);
 
