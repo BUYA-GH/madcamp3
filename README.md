@@ -62,7 +62,7 @@ Title, Select, Loading, Play, Score의 5가지 State로 구성되어 있다.
 
 ### Score State
 
- 플레이 결과를 확인하는 창이다. 최종 점수, Critical / Fast / Late / Miss 개수, Max Combo를 보여준다.
+ 플레이 결과를 확인하는 창이다. 최종 점수, Critical / Fast / Late / Miss 개수를 보여준다.
 
 ## Mechanism
 
